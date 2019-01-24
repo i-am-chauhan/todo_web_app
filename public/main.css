@@ -1,0 +1,74 @@
+.titleBar {
+  height: 80px;
+  background-color: black;
+  color: white;
+  border-radius: 10px;
+  display: flex;
+  position: relative;
+}
+
+.mainPage {
+  background-color: silver;
+}
+
+.appName {
+  position: absolute;
+  left: 100px;
+  top: 25px;
+  font-size: 30px;
+}
+
+.userName {
+  position: absolute;
+  right: 200px;
+  top: 25px;
+  font-size: 30px;
+}
+
+.logOut {
+  height: 30px;
+  width: 100px;
+  background: burlywood;
+  position: absolute;
+  top: 2px;
+  left: 200px;
+}
+
+.listContainer {
+  width: 700px;
+  height: 600px;
+  margin-left: 100px;
+  background: gray;
+  color: white;
+  padding-top: 5px;
+  font-size: 30px;
+}
+h3 {
+  text-align: center;
+}
+
+.list {
+}
+
+.submit {
+  height: 25px;
+  width: 80px;
+  background: rgb(189, 240, 240);
+  font-size: 15px;
+}
+
+.loginForm {
+  width: 400px;
+  margin: 50px auto;
+}
+
+h2 {
+  text-align: center;
+}
+
+.inputArea {
+  width: 600px;
+  height: 500px;
+  margin: 0 auto;
+  background: white;
+}
