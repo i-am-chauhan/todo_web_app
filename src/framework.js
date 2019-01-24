@@ -1,8 +1,8 @@
 const isMatching = (req, route) => {
   if (route.method && req.method != route.method) return false;
-  if (route.method =="POST" && req.url != route.url) return false;
+  if (route.method == "POST" && req.url != route.url) return false;
   return true;
-}
+};
 
 const send = (res, content, statusCode = 200) => {
   res.statusCode = statusCode;
@@ -18,10 +18,10 @@ class Handler {
     this.routes.push({ handler });
   }
   get(handler) {
-    this.routes.push({ method: 'GET', handler });
+    this.routes.push({ method: "GET", handler });
   }
   post(url, handler) {
-    this.routes.push({ method: 'POST', url, handler });
+    this.routes.push({ method: "POST", url, handler });
   }
   error(handler) {
     this.errorRoute = handler;
@@ -35,8 +35,8 @@ class Handler {
       if (!current) return;
       remaining = remaining.slice(1);
       current.handler(req, res, send, next);
-    }
+    };
     next();
   }
-};
-module.exports = Handler;
+}
+module.exports = { Handler, isMatching };

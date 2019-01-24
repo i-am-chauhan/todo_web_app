@@ -1,6 +1,6 @@
 const fs = require("fs");
 const { readArgs, getURLPath } = require("./appUtil.js");
-const Handler = require("./framework");
+const { Handler } = require("./framework");
 const app = new Handler();
 const html = require("./template");
 const userInfo = require("../private/userData.json");
@@ -36,33 +36,37 @@ const serveFile = function(req, res, send) {
   });
 };
 
-const isValidUser = function(userId, password) {
-  if (userInfo[userId]) {
-    return userInfo[userId]["password"] == password;
+const isValidUser = function(userId, password, informations = userInfo) {
+  if (informations[userId]) {
+    return informations[userId]["password"] == password;
   }
   return false;
 };
 
-const renderHomePage = function(req, res, send) {
+const renderHomePage = function(req, res, send, next, informations = userInfo) {
   const args = req.body;
   let { userId, password } = readArgs(args);
   userId = unescape(userId);
   password = unescape(password);
-  if (!isValidUser(userId, password)) {
+  if (!isValidUser(userId, password, informations)) {
     send(res, "authorization has been refused", 401);
     return;
   }
-  send(res, html.homepage(userInfo[userId].name));
+  send(res, html.homepage(informations[userId].name));
 };
 
-const renderLoginPage = function(req, res, send) {
+const renderLoginPage = function(req, res, send, next, fileSystem = fs) {
   let { name, email, userId, password } = readArgs(req.body);
   name = unescape(name).replace(/\+/g, " ");
   email = unescape(email);
   userId = unescape(userId);
   password = unescape(password);
   userInfo[userId] = { name, email, userId, password };
-  fs.writeFile("./private/userData.json", JSON.stringify(userInfo), err => {});
+  fileSystem.writeFile(
+    "./private/userData.json",
+    JSON.stringify(userInfo),
+    err => {}
+  );
   send(res, html.loginPage);
 };
 
@@ -72,4 +76,5 @@ app.get(serveFile);
 app.post("/home", renderHomePage);
 app.post("/login", renderLoginPage);
 
-module.exports = app.handleRequest.bind(app);
+let handler = app.handleRequest.bind(app);
+module.exports = { handler, renderHomePage, serveFile, renderLoginPage };

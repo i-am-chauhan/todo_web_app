@@ -1,8 +1,9 @@
 * DONE create server
 * DONE create framework
 * TODO Test?????
-* TODO make a signup page
-*** TODO store data of user accounts
+* DONE make a signup page
+*** DONE store data of user accounts
 *** TODO save name and password and generate a user data directory
 * DONE make a login page
 * DONE home page
+* TODO 
