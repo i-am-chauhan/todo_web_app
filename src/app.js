@@ -1,7 +1,8 @@
 const fs = require("fs");
 const Handler = require("./framework");
 const app = new Handler();
-const html = require('./template');
+const html = require("./template");
+const userInfo = require('../private/userData.json');
 
 const readBody = (req, res, next) => {
   let content = "";
@@ -51,8 +52,26 @@ const serveFile = function(req, res) {
   });
 };
 
+const isValidUser= function(name, password){
+  if(userInfo[name]){
+    return userInfo[name]['password'] == password;
+  }
+  return false;
+}
+
+const renderHomePage = function(req, res) {
+  const args = req.body;
+  const { name, password } = readArgs(args);
+  if(!isValidUser(name, password)) {
+    send(res, 'authorization has been refused', 401);
+    return;
+  }
+  send(res, html.homepage(name));
+};
+
 app.use(readBody);
 app.use(logRequest);
 app.get(serveFile);
+app.post("/home", renderHomePage);
 
 module.exports = app.handleRequest.bind(app);

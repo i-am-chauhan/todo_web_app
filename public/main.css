@@ -20,6 +20,7 @@
 
 .userName {
   position: absolute;
+  width: auto;
   right: 200px;
   top: 25px;
   font-size: 30px;
