@@ -4,6 +4,12 @@ const isMatching = (req, route) => {
   return true;
 }
 
+const send = (res, content, statusCode = 200) => {
+  res.statusCode = statusCode;
+  res.write(content);
+  res.end();
+};
+
 class Handler {
   constructor() {
     this.routes = [];
@@ -28,7 +34,7 @@ class Handler {
       let current = remaining[0];
       if (!current) return;
       remaining = remaining.slice(1);
-      current.handler(req, res, next);
+      current.handler(req, res, send, next);
     }
     next();
   }
