@@ -14,18 +14,19 @@ class Handler {
   constructor() {
     this.routes = [];
   }
+
   use(handler) {
     this.routes.push({ handler });
   }
+
   get(handler) {
     this.routes.push({ method: "GET", handler });
   }
+
   post(url, handler) {
     this.routes.push({ method: "POST", url, handler });
   }
-  error(handler) {
-    this.errorRoute = handler;
-  }
+
   handleRequest(req, res) {
     let matchingRoutes = this.routes.filter(route => isMatching(req, route));
     let remaining = [...matchingRoutes];
@@ -39,4 +40,4 @@ class Handler {
     next();
   }
 }
-module.exports = { Handler, isMatching };
+module.exports = { Handler, isMatching, send };
