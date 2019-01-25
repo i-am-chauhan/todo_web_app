@@ -4,6 +4,7 @@ const { Handler } = require("./framework");
 const app = new Handler();
 const html = require("./template");
 const userInfo = require("../private/userData.json");
+const userTodoData = require("../private/usersTODOData.json");
 
 const readBody = (req, res, send, next) => {
   let content = "";
@@ -55,26 +56,31 @@ const renderHomePage = function(req, res, send, next, informations = userInfo) {
   send(res, html.homepage(informations[userId].name));
 };
 
-const renderLoginPage = function(req, res, send, next, fileSystem = fs) {
+const writeJsonData = (fileSystem, path, content) => {
+  fileSystem.writeFile(path, JSON.stringify(content), err => {});
+};
+
+const renderSignUpPage = function(req, res, send, next, fileSystem = fs) {
   let { name, email, userId, password } = readArgs(req.body);
   name = unescape(name).replace(/\+/g, " ");
   email = unescape(email);
   userId = unescape(userId);
   password = unescape(password);
   userInfo[userId] = { name, email, userId, password };
-  fileSystem.writeFile(
-    "./private/userData.json",
-    JSON.stringify(userInfo),
-    err => {}
-  );
-  send(res, html.loginPage);
+  writeJsonData(fileSystem, "./private/userData.json", userInfo);
+  send(res, html.signupPage);
 };
 
 app.use(readBody);
 app.use(logRequest);
 app.get(serveFile);
 app.post("/home", renderHomePage);
-app.post("/login", renderLoginPage);
+app.post("/signup", renderSignUpPage);
 
 let handler = app.handleRequest.bind(app);
-module.exports = { handler, renderHomePage, serveFile, renderLoginPage };
+module.exports = {
+  handler,
+  renderHomePage,
+  serveFile,
+  renderSignUpPage
+};

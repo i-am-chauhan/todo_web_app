@@ -1,6 +1,11 @@
 const { assert, expect, should } = require("chai");
 const html = require("../src/template");
-const { serveFile, renderHomePage, renderLoginPage } = require("../src/app");
+const {
+  serveFile,
+  renderHomePage,
+  renderSignUpPage,
+  renderLogInPage
+} = require("../src/app");
 
 describe("serveFile", function() {
   it("should return {}, login page and 200 statuscode for the given request ", function(done) {
@@ -70,9 +75,9 @@ describe("renderHomePage", function() {
   });
 });
 
-describe("renderLoginPage", function() {
-  it("should return the login page and 200 status code for the given request", function(done) {
-    const req = { method: "POST", url: "/login" };
+describe("renderSignUpPage", function() {
+  it("should return the sign up page and 200 status code for the given request", function(done) {
+    const req = { method: "POST", url: "/signup" };
     req.body = "name=shubham&password=12&email=yes@gmail.com&userId=xyz";
     const res = {};
     const next = () => {};
@@ -80,10 +85,10 @@ describe("renderLoginPage", function() {
     fs.writeFile = () => {};
     const send = (res, content, statusCode = 200) => {
       assert.deepEqual(res, {});
-      assert.deepEqual(content, html.loginPage);
+      assert.deepEqual(content, html.signupPage);
       assert.deepEqual(statusCode, 200);
       done();
     };
-    renderLoginPage(req, res, send, next, fs);
+    renderSignUpPage(req, res, send, next, fs);
   });
 });

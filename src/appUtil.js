@@ -10,7 +10,7 @@ const readArgs = text => {
 };
 
 const getURLPath = function(url) {
-  if (url == "/" || url == "/login") return "login";
+  if (url == "/" || url == "/login" || url == "/logout") return "login";
   if (url == "/signup") return "signup";
   return "./public" + url;
 };

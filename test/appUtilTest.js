@@ -20,8 +20,8 @@ describe("getURLPath", function() {
   it("should return login when url is /login", function() {
     expect(getURLPath("/login")).to.equal("login");
   });
-  it("should return signup when url is /signup", function() {
-    expect(getURLPath("/signup")).to.equal("signup");
+  it("should return login when url is /logout", function() {
+    expect(getURLPath("/logout")).to.equal("login");
   });
   it("should return given url with the prefix ./public except /,/login,/signup", function() {
     expect(getURLPath("/url")).to.equal("./public/url");

@@ -1,5 +1,5 @@
 const html = {
-  homepage:(name) => `<!DOCTYPE html>
+  homepage: name => `<!DOCTYPE html>
   <html>
     <head>
       <title>TODO</title>
@@ -10,7 +10,7 @@ const html = {
       <div class="titleBar">
         <div class="appName">TODO</div>
         <div class="userName">
-          ${name} <button class="logOut">Logout</button>
+          ${name} <a href="/logout"><button class="logOut">Logout</button></a>
         </div>
       </div>
       <div class="listContainer">
@@ -25,7 +25,7 @@ const html = {
     </body>
   </html>
   `,
-  loginPage:`<!DOCTYPE html>
+  loginPage: `<!DOCTYPE html>
   <html>
     <head>
       <title>LogIn page</title>
@@ -52,7 +52,7 @@ const html = {
     </body>
   </html>
   `,
-  signupPage:`<!DOCTYPE html>
+  signupPage: `<!DOCTYPE html>
   <html>
     <head>
       <title>SignUp page</title>
@@ -64,7 +64,7 @@ const html = {
       <div class="inputArea">
         <h3 style="padding-top: 50px">Create your account</h3>
         <div class="loginForm">
-          <form action="/login" method="post">
+          <form action="/signup" method="post">
             <label>Name : </label>
             <input type="text" name="name" id="name" required /> <br /><br />
             <label>Email-Id : </label>
@@ -76,7 +76,8 @@ const html = {
             <br /><br />
             <button class="submit" type="submit" value="submit">Submit</button>
           </form>
-        </div>
+          </div>
+          <a href="/login"> <h3><< Go back to login page</h3></a>
       </div>
     </body>
   </html>
