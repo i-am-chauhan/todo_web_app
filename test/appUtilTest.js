@@ -14,16 +14,7 @@ describe("readArgs", function() {
 });
 
 describe("getURLPath", function() {
-  it("should return login when url is /", function() {
-    expect(getURLPath("/")).to.equal("login");
-  });
-  it("should return login when url is /login", function() {
-    expect(getURLPath("/login")).to.equal("login");
-  });
-  it("should return login when url is /logout", function() {
-    expect(getURLPath("/logout")).to.equal("login");
-  });
-  it("should return given url with the prefix ./public except /,/login,/signup", function() {
+  it("should return given url with the prefix ./public ", function() {
     expect(getURLPath("/url")).to.equal("./public/url");
   });
 });

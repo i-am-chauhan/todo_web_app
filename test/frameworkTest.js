@@ -31,14 +31,16 @@ describe("Handler", function() {
     reqHandler.use("serveFile");
     expect(reqHandler.routes).to.have.deep.members([{ handler: "serveFile" }]);
   });
+
   describe("get", function() {
     const reqHandler = new Handler();
     it("expects to have the given handler as a member of handler.routes", function() {});
-    reqHandler.get("serveFile");
+    reqHandler.get("/", "serveFile");
     expect(reqHandler.routes).to.have.deep.members([
-      { method: "GET", handler: "serveFile" }
+      { method: "GET", url: "/", handler: "serveFile" }
     ]);
   });
+
   describe("post", function() {
     const reqHandler = new Handler();
     it("expects to have the given handler as a member of handler.routes", function() {});
@@ -47,6 +49,7 @@ describe("Handler", function() {
       { method: "POST", handler: "serveFile", url: "/home" }
     ]);
   });
+
   describe("handleRequest", function() {
     const reqHandler = new Handler();
     beforeEach(() => {
@@ -57,8 +60,9 @@ describe("Handler", function() {
         send(res, "hi");
       };
       reqHandler.post("/home", handlerForPost);
-      reqHandler.get(handlerForGet);
+      reqHandler.get("/login", handlerForGet);
     });
+
     it("should call handlerForGet for GET method", function(done) {
       const res = {};
       res.write = content => {
@@ -72,6 +76,7 @@ describe("Handler", function() {
       const req = { method: "GET", url: "/login" };
       reqHandler.handleRequest(req, res);
     });
+
     it("should call handlerForPost for POST method", function(done) {
       const res = {};
       res.write = content => {
@@ -85,6 +90,7 @@ describe("Handler", function() {
       const req = { method: "POST", url: "/home" };
       reqHandler.handleRequest(req, res);
     });
+
     it("should not change the response object for empty routes", function() {
       const reqHandler = new Handler();
       const res = {};
@@ -108,6 +114,7 @@ describe("send", function() {
     };
     send(res, "hello");
   });
+
   it("should write the status code 404 and Not Found error message as content in the given res object", function(done) {
     const res = {};
     res.write = content => {

@@ -1,3 +1,5 @@
+const fs = require("fs");
+
 const readArgs = text => {
   let args = {};
   const splitKeyValue = pair => pair.split("=");
@@ -10,12 +12,22 @@ const readArgs = text => {
 };
 
 const getURLPath = function(url) {
-  if (url == "/" || url == "/login" || url == "/logout") return "login";
-  if (url == "/signup") return "signup";
   return "./public" + url;
+};
+
+const writeJsonData = (path, content, fileSystem = fs) => {
+  fileSystem.writeFile(path, JSON.stringify(content), err => {});
+};
+
+const readFile = function(filePath) {
+  if(!fs.existsSync('private')) fs.mkdirSync('private');
+  if (!fs.existsSync(filePath)) fs.writeFileSync(filePath, "{}", "utf-8");
+  return JSON.parse(fs.readFileSync(filePath, "utf-8"));
 };
 
 module.exports = {
   readArgs,
-  getURLPath
+  getURLPath,
+  writeJsonData,
+  readFile
 };

@@ -1,30 +1,48 @@
 const html = {
   homepage: name => `<!DOCTYPE html>
   <html>
-    <head>
-      <title>TODO</title>
-      <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
-      <script src="main.js"></script>
-    </head>
-    <body class="mainPage">
-      <div class="titleBar">
-        <div class="appName">TODO</div>
-        <div class="userName">
-          ${name} <a href="/logout"><button class="logOut">Logout</button></a>
-        </div>
+  <head>
+    <title>TODO</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="todo.js"></script>
+  </head>
+  <body class="mainPage">
+    <div class="titleBar">
+      <div class="appName">TODO</div>
+      <div class="userName">
+        ${name} <a href="/logout"><button class="logOut">Logout</button></a>
       </div>
+    </div>
+    <div style="display: flex">
       <div class="listContainer">
         <h3>Todo List</h3>
-        <div class="list">
-          <ul>
-            <a href=""></a>
-            <li>movies</li>
-          </ul>
+        <div><ul id="todoLists"></ul></div>
+      </div>
+      <div class="addList">
+        <h3>Add your todo</h3>
+        <div style="padding: 15px">
+          <label>Title:</label>
+          <input
+            style="width:200px;height:20px"
+            type="text"
+            name="title"
+            id="title"
+          />
+          <br /><br />
+          Description:
+          <textarea
+            name="description"
+            id="description"
+            cols="30"
+            rows="10"
+          ></textarea>
+          <br /><br />
+          <button class="submit" id="add">Add</button>
         </div>
       </div>
-    </body>
-  </html>
-  `,
+    </div>
+  </body>
+</html>`,
   loginPage: `<!DOCTYPE html>
   <html>
     <head>
@@ -64,7 +82,7 @@ const html = {
       <div class="inputArea">
         <h3 style="padding-top: 50px">Create your account</h3>
         <div class="loginForm">
-          <form action="/signup" method="post">
+          <form action="/createNewAccount" method="post">
             <label>Name : </label>
             <input type="text" name="name" id="name" required /> <br /><br />
             <label>Email-Id : </label>
