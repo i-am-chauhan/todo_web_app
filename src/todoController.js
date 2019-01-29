@@ -24,7 +24,7 @@ const cookies = readFile(COOKIES_JSON);
 const makeTodoClass = (userTodo, list) => {
   const todoList = new TodoList(list.title, list.description);
   list.items.forEach(item => {
-    todoList.addItem(new TodoItem(item.title, item.description));
+    todoList.addItem(new TodoItem(item.description));
   });
   userTodo.addTodoList(todoList);
 };
@@ -189,28 +189,28 @@ const getListDescription = function(userId, id) {
 };
 
 const renderListPage = function(req, res, send) {
-  const { title, id } = parseURL(req.url);
+  let { title, id } = parseURL(req.url);
   const cookie = req.headers["cookie"];
   const userId = getUserId(cookie);
   const userName = userInfo[userId].name;
   const description = getListDescription(userId, id);
+  title = format(title);
   send(res, html.todoListPage(userName, title, description));
 };
 
-const createTodoItem = function(title, description, list) {
-  const formattedTitle = format(title);
+const createTodoItem = function(description, list) {
   const formattedDescription = format(description);
-  const item = new TodoItem(formattedTitle, formattedDescription);
+  const item = new TodoItem(formattedDescription);
   list.addItem(item);
   writeJsonData(USER_TODO_DATA_JSON, userTodoData);
 };
 
 const saveTodoItem = function(req, res, send) {
-  const { title, description, id } = readArgs(req.body);
+  const { description, id } = readArgs(req.body);
   const cookie = req.headers["cookie"];
   const userId = getUserId(cookie);
   const list = userTodoData[userId].todoList[+id];
-  createTodoItem(title, description, list);
+  createTodoItem(description, list);
   const content = JSON.stringify(list.items);
   send(res, content);
 };
@@ -219,7 +219,8 @@ const renderEditListPage = function(req, res, send) {
   const cookie = req.headers["cookie"];
   const userId = getUserId(cookie);
   const userName = userInfo[userId].name;
-  const { title, id } = parseURL(req.url);
+  let { title, id } = parseURL(req.url);
+  title = format(title);
   const description = getListDescription(userId, id);
   send(res, html.editListPage(userName, title, description, id));
 };
@@ -247,32 +248,26 @@ const renderEditItemPage = function(req, res, send) {
   const cookie = req.headers["cookie"];
   const userId = getUserId(cookie);
   const userName = userInfo[userId].name;
-  const { title, listId, itemId } = parseURL(req.url);
+  let { listId, itemId } = parseURL(req.url);
   const item = userTodoData[userId].todoList[+listId].items[+itemId];
   const description = item.description;
-  const content = html.editItemPage(
-    userName,
-    title,
-    description,
-    listId,
-    itemId
-  );
+  const content = html.editItemPage(userName, description, listId, itemId);
   send(res, content);
 };
 const editItem = function(req, res) {
-  const { title, description, listId, itemId } = readArgs(req.body);
+  const { description, listId, itemId } = readArgs(req.body);
   const cookie = req.headers["cookie"];
   const userId = getUserId(cookie);
   const list = userTodoData[userId].todoList[+listId];
   const listTitle = list.title;
   const item = userTodoData[userId].todoList[+listId].items[+itemId];
-  item.editDetails(title, description);
+  item.editDetails(description);
   writeJsonData(USER_TODO_DATA_JSON, userTodoData);
   redirect(res, `/list/view/title=${listTitle}&id=${listId}/`, 302);
 };
 
 const deleteItem = function(req, res) {
-  const { title, description, listId, itemId } = parseURL(req.url);
+  const { listId, itemId } = parseURL(req.url);
   const cookie = req.headers["cookie"];
   const userId = getUserId(cookie);
   const list = userTodoData[userId].todoList[+listId];

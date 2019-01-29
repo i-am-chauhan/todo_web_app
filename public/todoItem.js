@@ -8,29 +8,23 @@ const parseURL = function(url) {
   );
 };
 
-const addItem = (currentURL, title, description, id) => {
+const addItem = (currentURL, description, id) => {
   const todoItems = document.getElementById("todoItems");
   let item = document.createElement("li");
   item.id = id;
-  const itemTitle = document.createElement("span");
-  const itemDescription = document.createElement("p");
-  itemDescription.innerText = description;
-  itemTitle.id = `title_${id}`;
-  itemTitle.innerText = title;
+  item.innerText = description;
   todoItems.appendChild(item);
-  todoItems.appendChild(itemDescription);
-  item.appendChild(itemTitle);
-  createAndDrawButton(currentURL, title, id, item);
+  createAndDrawButton(currentURL, id, item);
 };
 
-const createAndDrawButton = function(currentURL, title, id, parentElement) {
+const createAndDrawButton = function(currentURL, id, parentElement) {
   const listId = getId(currentURL);
   const edit = createButton("edit", id);
   const del = createButton("delete", id);
   const editItem = document.createElement("a");
-  editItem.href = `/item/edit/title=${title}&listId=${listId}&itemId=${id}`;
+  editItem.href = `/item/edit/listId=${listId}&itemId=${id}`;
   const deleteItem = document.createElement("a");
-  deleteItem.href = `/item/delete/title=${title}&listId=${listId}&itemId=${id}`;
+  deleteItem.href = `/item/delete/listId=${listId}&itemId=${id}`;
   parentElement.appendChild(editItem);
   parentElement.appendChild(deleteItem);
   editItem.appendChild(edit);
@@ -47,7 +41,7 @@ const createButton = function(name, id) {
 const showItems = function(url, items) {
   let id = 0;
   items.map(item => {
-    addItem(url, item.title, item.description, id);
+    addItem(url, item.description, id);
     id++;
   });
 };
@@ -60,9 +54,8 @@ const fetchAllItems = function(currentURL) {
     .then(showItems.bind(null, currentURL));
 };
 
-const clearForm = function(firstElement, secondElement) {
-  firstElement.value = "";
-  secondElement.value = "";
+const clearForm = function(element) {
+  element.value = "";
 };
 
 const getId = url => {
@@ -72,14 +65,11 @@ const getId = url => {
 
 const addItemAndFetchAllItems = function(currentURL) {
   const id = getId(currentURL);
-  const title = document.getElementById("title");
   const description = document.getElementById("description");
-  const itemData = `title=${title.value}&description=${
-    description.value
-  }&id=${id}`;
+  const itemData = `description=${description.value}&id=${id}`;
   const req = new Request("/addItem", { method: "POST", body: itemData });
   const todoItems = document.getElementById("todoItems");
-  clearForm(title, description);
+  clearForm(description);
   todoItems.innerHTML = "";
   fetch(req)
     .then(res => res.json())

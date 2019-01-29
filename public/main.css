@@ -21,7 +21,7 @@
 .userName {
   position: absolute;
   width: auto;
-  right: 200px;
+  right: 100px;
   top: 25px;
   font-size: 30px;
 }
@@ -30,9 +30,9 @@
   height: 30px;
   width: 100px;
   background: burlywood;
-  position: absolute;
-  top: 2px;
-  left: 200px;
+  position: relative;
+  bottom: 5px;
+  left: 20px;
 }
 
 .listContainer {
@@ -79,4 +79,8 @@ h2 {
   background: gray;
   color: white;
   font-size: 20px;
+}
+
+ul{
+  list-style-type: none;
 }

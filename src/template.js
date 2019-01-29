@@ -124,14 +124,6 @@ const html = {
           <div class="addList">
             <h3>Add item</h3>
             <div style="padding: 15px">
-              <label>Title:</label>
-              <input
-                style="width:200px;height:20px"
-                type="text"
-                name="title"
-                id="title"
-              />
-              <br /><br />
               Description:
               <textarea
                 name="description"
@@ -190,7 +182,7 @@ const html = {
   </body>
 </html>
 `,
-  editItemPage: (name, title, description, listId, itemId) => `<html>
+  editItemPage: (name, description, listId, itemId) => `<html>
 <head>
   <title>Edit Todo Item</title>
   <link rel="stylesheet" type="text/css" media="screen" href="/main.css" />
@@ -206,16 +198,7 @@ const html = {
     <h2 style="padding-top: 50px">Edit todo Item</h2>
     <div class="loginForm">
       <form action="/item/edit/" method="post" style="font-size: 20px">
-        <label>Title : </label>
-        <input
-          style="font-size: 20px; height: 40px; width: 450px"
-          type="text"
-          name="title"
-          id="title"
-          value="${title}"
-          required
-        />
-        <br /><br />
+        
         <label>Description : </label>
         <input
           style="font-size: 20px; height: 40px; width: 450px"
