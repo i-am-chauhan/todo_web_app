@@ -1,12 +1,17 @@
-const addList = (title, id) => {
+const addList = (title, status, id) => {
+  const statusBox = { done: "&#9745", undone: "&#9744" };
   const todoLists = document.getElementById("todoLists");
   const list = document.createElement("li");
   list.id = id;
+  const checkBox = document.createElement("span");
+  checkBox.id = `status_${id}`;
+  checkBox.innerHTML = statusBox[status];
   const listTitle = document.createElement("a");
   listTitle.href = `/list/view/title=${title}&id=${id}`;
   listTitle.id = `title_${id}`;
   listTitle.innerText = `${title}`;
   todoLists.appendChild(list);
+  list.appendChild(checkBox);
   list.appendChild(listTitle);
   createAndDrawButton(title, id, list);
 };
@@ -33,8 +38,9 @@ const createButton = function(name, id) {
 
 const showList = function(titles) {
   let id = 0;
-  titles.map(listTitle => {
-    addList(listTitle, id);
+  console.log('titles', titles);
+  titles.map(({ title, status }) => {
+    addList(title, status, id);
     id++;
   });
 };
@@ -64,19 +70,28 @@ const fetchAllLists = function() {
     .then(showList);
 };
 
-const performOperation = function() {
-  const target = event.target;
-  const id = target.id;
-  if (id.startsWith("edit")) editList(id);
-  if (id.startsWith("delete")) deleteList(id);
+const toggleStatus = function(listId) {
+  const container = document.getElementById("todoLists");
+  container.innerHTML = "";
+  fetch("/toggleListStatus", { method: "POST", body: listId })
+    .then(res => res.json())
+    .then(showList);
 };
 
-const editList = function(id) {};
+const updateStatus = function(checkBoxId) {
+  const listId = checkBoxId.slice(7);
+  toggleStatus(listId);
+};
 
 window.onload = () => {
   fetchAllLists();
   const add = document.getElementById("add");
   add.onclick = addListAndFetchAllLists;
   const container = document.getElementById("todoLists");
-  container.onclick = performOperation;
+  container.onclick = () => {
+    const id = event.target.id;
+    if (id.startsWith("status")) {
+      updateStatus(id);
+    }
+  };
 };

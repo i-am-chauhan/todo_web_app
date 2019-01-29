@@ -21,7 +21,9 @@ const {
   deleteList,
   renderEditItemPage,
   editItem,
-  deleteItem
+  deleteItem,
+  toggleListStatus,
+  toggleItemStatus
 } = require("./todoController");
 
 app.use(readBody);
@@ -40,6 +42,8 @@ app.post(/\/item\/edit\//, editItem);
 app.post(/\/list\/view\//, serveItems);
 app.post(/\/list\/edit\//, editList);
 app.post("/", renderUserHomePage);
+app.post("/toggleListStatus", toggleListStatus);
+app.post("/toggleItemStatus", toggleItemStatus);
 app.post("/createNewAccount", createNewAccount);
 app.post("/addList", saveTodoList);
 app.post("/addItem", saveTodoItem);

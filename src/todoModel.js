@@ -1,9 +1,8 @@
 class TodoItem {
-  constructor(description) {
+  constructor(description, status) {
     this.description = description;
-    this.statusType = ["done", "undone"];
-    this.statusIndex = 0;
-    this.status = "undone";
+    this.status = status;
+    this.statusType = {undone:"done", done:"undone"};
   }
 
   editDetails(description) {
@@ -11,19 +10,17 @@ class TodoItem {
   }
 
   toggleStatus() {
-    this.statusIndex = 1 - this.statusIndex;
-    this.status = this.statusType[this.statusIndex];
+    this.status = this.statusType[this.status];
   }
 }
 
 class TodoList {
-  constructor(title, description) {
+  constructor(title, description, status) {
     this.title = title;
     this.description = description;
+    this.status = status;
     this.items = [];
-    this.statusType = ["done", "undone"];
-    this.statusIndex = 0;
-    this.status = "undone";
+    this.statusType = {undone:"done", done:"undone"};
   }
 
   addItem(item) {
@@ -40,8 +37,7 @@ class TodoList {
   }
 
   toggleStatus() {
-    this.statusIndex = 1 - this.statusIndex;
-    this.status = this.statusType[this.statusIndex];
+    this.status = this.statusType[this.status];
   }
 }
 

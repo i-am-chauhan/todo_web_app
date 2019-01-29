@@ -8,12 +8,19 @@ const parseURL = function(url) {
   );
 };
 
-const addItem = (currentURL, description, id) => {
+const addItem = (currentURL, description, status, id) => {
+  const statusBox = { done: "&#9745", undone: "&#9744" };
   const todoItems = document.getElementById("todoItems");
   let item = document.createElement("li");
+  let checkBox = document.createElement("span");
+  checkBox.id = `status_${id}`;
+  checkBox.innerHTML = statusBox[status];
   item.id = id;
-  item.innerText = description;
+  const descriptionArea = document.createElement("span");
+  descriptionArea.innerText = description;
   todoItems.appendChild(item);
+  item.appendChild(checkBox);
+  item.appendChild(descriptionArea);
   createAndDrawButton(currentURL, id, item);
 };
 
@@ -41,7 +48,7 @@ const createButton = function(name, id) {
 const showItems = function(url, items) {
   let id = 0;
   items.map(item => {
-    addItem(url, item.description, id);
+    addItem(url, item.description, item.status, id);
     id++;
   });
 };
@@ -64,9 +71,9 @@ const getId = url => {
 };
 
 const addItemAndFetchAllItems = function(currentURL) {
-  const id = getId(currentURL);
+  const listId = getId(currentURL);
   const description = document.getElementById("description");
-  const itemData = `description=${description.value}&id=${id}`;
+  const itemData = `description=${description.value}&listId=${listId}`;
   const req = new Request("/addItem", { method: "POST", body: itemData });
   const todoItems = document.getElementById("todoItems");
   clearForm(description);
@@ -76,9 +83,33 @@ const addItemAndFetchAllItems = function(currentURL) {
     .then(showItems.bind(null, currentURL));
 };
 
+const toggleStatus = function(currentURL, listId, itemId) {
+  const container = document.getElementById("todoItems");
+  container.innerHTML = "";
+  fetch("/toggleItemStatus", {
+    method: "POST",
+    body: `listId=${listId}&itemId=${itemId}`
+  })
+    .then(res => res.json())
+    .then(showItems.bind(null, currentURL));
+};
+
+const updateStatus = function(currentURL, checkBoxId) {
+  const listId = getId(currentURL);
+  const itemId = checkBoxId.slice(7);
+  toggleStatus(currentURL, listId, itemId);
+};
+
 window.onload = () => {
   const currentURL = document.location.href;
   fetchAllItems(currentURL);
   const add = document.getElementById("add");
   add.onclick = addItemAndFetchAllItems.bind(null, currentURL);
+  const container = document.getElementById("todoItems");
+  container.onclick = () => {
+    const id = event.target.id;
+    if (id.startsWith("status")) {
+      updateStatus(currentURL, id);
+    }
+  };
 };
