@@ -4,7 +4,8 @@ const {
   getURLPath,
   writeJsonData,
   readFile,
-  redirect
+  redirect,
+  format
 } = require("./appUtil.js");
 
 const { TodoList, UserTODOs, TodoItem } = require("./todoModel.js");
@@ -90,8 +91,8 @@ const renderUserHomePage = function(
 ) {
   const args = req.body;
   let { userId, password } = readArgs(args);
-  userId = unescape(userId);
-  password = unescape(password);
+  userId = format(userId);
+  password = format(password);
   if (!isValidUser(userId, password, informations)) {
     send(res, "authorization has been refused", 401);
     return;
@@ -105,10 +106,10 @@ const renderUserHomePage = function(
 
 const createNewAccount = function(req, res, send, next, fileSystem = fs) {
   let { name, email, userId, password } = readArgs(req.body);
-  name = unescape(name).replace(/\+/g, " ");
-  email = unescape(email);
-  userId = unescape(userId);
-  password = unescape(password);
+  name = format(name);
+  email = format(email);
+  userId = format(userId);
+  password = format(password);
   userInfo[userId] = { name, email, userId, password };
   userTodoData[userId] = new UserTODOs(userId);
   writeJsonData(USER_TODO_DATA_JSON, userTodoData, fileSystem);
@@ -117,7 +118,9 @@ const createNewAccount = function(req, res, send, next, fileSystem = fs) {
 };
 
 const createTodoList = function(title, description, userId) {
-  const list = new TodoList(title, description);
+  const formattedTitle = format(title);
+  const formattedDescription = format(description);
+  const list = new TodoList(formattedTitle, formattedDescription);
   userTodoData[userId].addTodoList(list);
   writeJsonData(USER_TODO_DATA_JSON, userTodoData);
 };
@@ -195,7 +198,9 @@ const renderListPage = function(req, res, send) {
 };
 
 const createTodoItem = function(title, description, list) {
-  const item = new TodoItem(title, description);
+  const formattedTitle = format(title);
+  const formattedDescription = format(description);
+  const item = new TodoItem(formattedTitle, formattedDescription);
   list.addItem(item);
   writeJsonData(USER_TODO_DATA_JSON, userTodoData);
 };

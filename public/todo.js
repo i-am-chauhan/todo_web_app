@@ -2,20 +2,24 @@ const addList = (title, id) => {
   const todoLists = document.getElementById("todoLists");
   const list = document.createElement("li");
   list.id = id;
-  const edit = createButton("edit", id);
-  const del = createButton("delete", id);
   const listTitle = document.createElement("a");
   listTitle.href = `/list/view/title=${title}&id=${id}`;
-  const editList = document.createElement("a");
-  editList.href = `/list/edit/title=${title}&id=${id}`;
-  const deleteList = document.createElement("a");
-  deleteList.href = `/list/delete/title=${title}&id=${id}`;
   listTitle.id = `title_${id}`;
   listTitle.innerText = `${title}`;
   todoLists.appendChild(list);
   list.appendChild(listTitle);
-  list.appendChild(editList);
-  list.appendChild(deleteList);
+  createAndDrawButton(title, id, list);
+};
+
+const createAndDrawButton = function(title, id, parentElement) {
+  const edit = createButton("edit", id);
+  const del = createButton("delete", id);
+  const editList = document.createElement("a");
+  editList.href = `/list/edit/title=${title}&id=${id}`;
+  const deleteList = document.createElement("a");
+  deleteList.href = `/list/delete/title=${title}&id=${id}`;
+  parentElement.appendChild(editList);
+  parentElement.appendChild(deleteList);
   editList.appendChild(edit);
   deleteList.appendChild(del);
 };

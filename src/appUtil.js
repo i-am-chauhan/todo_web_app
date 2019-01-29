@@ -20,21 +20,26 @@ const writeJsonData = (path, content, fileSystem = fs) => {
 };
 
 const readFile = function(filePath) {
-  if(!fs.existsSync('private')) fs.mkdirSync('private');
+  if (!fs.existsSync("private")) fs.mkdirSync("private");
   if (!fs.existsSync(filePath)) fs.writeFileSync(filePath, "{}", "utf-8");
   return JSON.parse(fs.readFileSync(filePath, "utf-8"));
 };
 
-const redirect = function(res, url, statusCode){
-  res.setHeader('location', url);
+const redirect = function(res, url, statusCode) {
+  res.setHeader("location", url);
   res.statusCode = statusCode;
   res.end();
-}
+};
+
+const format = function(content) {
+  return unescape(content).replace(/\+/g, " ");
+};
 
 module.exports = {
   readArgs,
   getURLPath,
   writeJsonData,
   readFile,
-  redirect
+  redirect,
+  format
 };

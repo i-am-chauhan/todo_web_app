@@ -12,23 +12,27 @@ const addItem = (currentURL, title, description, id) => {
   const todoItems = document.getElementById("todoItems");
   let item = document.createElement("li");
   item.id = id;
-  const listId = getId(currentURL);
-  const edit = createButton("edit", id);
-  const del = createButton("delete", id);
   const itemTitle = document.createElement("span");
   const itemDescription = document.createElement("p");
-  const editItem = document.createElement("a");
-  editItem.href = `/item/edit/title=${title}&listId=${listId}&itemId=${id}`;
-  const deleteItem = document.createElement("a");
-  deleteItem.href = `/item/delete/title=${title}&listId=${listId}&itemId=${id}`;
   itemDescription.innerText = description;
   itemTitle.id = `title_${id}`;
   itemTitle.innerText = title;
   todoItems.appendChild(item);
   todoItems.appendChild(itemDescription);
   item.appendChild(itemTitle);
-  item.appendChild(editItem);
-  item.appendChild(deleteItem);
+  createAndDrawButton(currentURL, title, id, item);
+};
+
+const createAndDrawButton = function(currentURL, title, id, parentElement) {
+  const listId = getId(currentURL);
+  const edit = createButton("edit", id);
+  const del = createButton("delete", id);
+  const editItem = document.createElement("a");
+  editItem.href = `/item/edit/title=${title}&listId=${listId}&itemId=${id}`;
+  const deleteItem = document.createElement("a");
+  deleteItem.href = `/item/delete/title=${title}&listId=${listId}&itemId=${id}`;
+  parentElement.appendChild(editItem);
+  parentElement.appendChild(deleteItem);
   editItem.appendChild(edit);
   deleteItem.appendChild(del);
 };
