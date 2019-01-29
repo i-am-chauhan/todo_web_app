@@ -219,7 +219,7 @@ const renderEditListPage = function(req, res, send) {
   send(res, html.editListPage(userName, title, description, id));
 };
 
-const editList = function(req, res, send) {
+const editList = function(req, res) {
   const { title, description, id } = readArgs(req.body);
   const cookie = req.headers["cookie"];
   const userId = getUserId(cookie);
@@ -229,7 +229,7 @@ const editList = function(req, res, send) {
   redirect(res, "/", 302);
 };
 
-const deleteList = function(req, res, send) {
+const deleteList = function(req, res) {
   const cookie = req.headers["cookie"];
   const userId = getUserId(cookie);
   const { id } = parseURL(req.url);
@@ -254,7 +254,7 @@ const renderEditItemPage = function(req, res, send) {
   );
   send(res, content);
 };
-const editItem = function(req, res, send) {
+const editItem = function(req, res) {
   const { title, description, listId, itemId } = readArgs(req.body);
   const cookie = req.headers["cookie"];
   const userId = getUserId(cookie);
@@ -262,6 +262,17 @@ const editItem = function(req, res, send) {
   const listTitle = list.title;
   const item = userTodoData[userId].todoList[+listId].items[+itemId];
   item.editDetails(title, description);
+  writeJsonData(USER_TODO_DATA_JSON, userTodoData);
+  redirect(res, `/list/view/title=${listTitle}&id=${listId}/`, 302);
+};
+
+const deleteItem = function(req, res) {
+  const { title, description, listId, itemId } = parseURL(req.url);
+  const cookie = req.headers["cookie"];
+  const userId = getUserId(cookie);
+  const list = userTodoData[userId].todoList[+listId];
+  const listTitle = list.title;
+  list.deleteItem(itemId);
   writeJsonData(USER_TODO_DATA_JSON, userTodoData);
   redirect(res, `/list/view/title=${listTitle}&id=${listId}/`, 302);
 };
@@ -285,5 +296,6 @@ module.exports = {
   editList,
   deleteList,
   editItem,
-  renderEditItemPage
+  renderEditItemPage,
+  deleteItem
 };

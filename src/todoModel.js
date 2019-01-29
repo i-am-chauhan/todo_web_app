@@ -25,6 +25,9 @@ class TodoList {
     this.title = title;
     this.description = description;
   }
+  deleteItem(id) {
+    this.items.splice(id, 1);
+  }
 }
 
 class UserTODOs {

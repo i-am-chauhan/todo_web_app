@@ -20,7 +20,8 @@ const {
   editList,
   deleteList,
   renderEditItemPage,
-  editItem
+  editItem,
+  deleteItem
 } = require("./todoController");
 
 app.use(readBody);
@@ -34,6 +35,7 @@ app.get(/\/list\/view\//, renderListPage);
 app.get(/\/list\/edit\//, renderEditListPage);
 app.get(/\/item\/edit\//, renderEditItemPage);
 app.get(/\/list\/delete\//, deleteList);
+app.get(/\/item\/delete\//, deleteItem);
 app.post(/\/item\/edit\//, editItem);
 app.post(/\/list\/view\//, serveItems);
 app.post(/\/list\/edit\//, editList);
