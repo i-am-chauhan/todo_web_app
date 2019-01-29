@@ -55,7 +55,7 @@ const html = {
       <div class="inputArea">
         <h3 style="padding-top: 50px">Log in to your account</h3>
         <div class="loginForm">
-          <form action="/home" method="post">
+          <form action="/" method="post">
             <label>User-Id : </label>
             <input type="text" name="userId" id="userId" required/> <br /><br />
             <label>Password : </label>
@@ -97,6 +97,52 @@ const html = {
           </div>
           <a href="/login"> <h3><< Go back to login page</h3></a>
       </div>
+    </body>
+  </html>
+  `,
+  todoListPage: (username, listname, description) => `<!DOCTYPE html>
+  <html>
+    <head>
+      <title>User Todo List</title>
+      <link rel="stylesheet" type="text/css" href="/main.css" />
+      <script src="/todoItem.js"></script>
+    </head>
+    <body>
+      <div class="titleBar">
+        <div class="appName">TODO</div>
+        <h2 style="position: absolute; padding-left: 50% ">${listname}</h2>
+        <div class="userName">
+          ${username} <a href="/logout"><button class="logOut">Logout</button></a>
+        </div>
+      </div>
+      <div style="display: flex">
+      <div class="listContainer">
+      <div style=padding-left:20px>description: ${description}</div>
+            <h3>Todo Items</h3>
+            <div><ul id="todoItems"></ul></div>
+          </div>
+          <div class="addList">
+            <h3>Add item</h3>
+            <div style="padding: 15px">
+              <label>Title:</label>
+              <input
+                style="width:200px;height:20px"
+                type="text"
+                name="title"
+                id="title"
+              />
+              <br /><br />
+              Description:
+              <textarea
+                name="description"
+                id="description"
+                cols="30"
+                rows="10"
+              ></textarea>
+              <br /><br />
+              <button class="submit" id="add">Add</button>
+            </div>
+          </div>
     </body>
   </html>
   `

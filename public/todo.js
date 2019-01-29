@@ -1,25 +1,71 @@
-const addList = () => {
-  const title = document.getElementById("title");
-  const description = document.getElementById("description");
+const addList = (title, id) => {
   const todoLists = document.getElementById("todoLists");
-  let list = document.createElement("li");
-  const listData = `title=${title.value}&description=${description.value}`
-  list.innerText = title.value;
-  title.value = '';
-  description.value = '';
+  const list = document.createElement("li");
+  list.id = id;
+  const edit = createButton("edit", id);
+  const del = createButton("delete", id);
+  const listTitle = document.createElement("a");
+  listTitle.href = `/list/view/title=${title}&id=${id}`;
+  listTitle.id = `title_${id}`;
+  listTitle.innerText = `${title}`;
   todoLists.appendChild(list);
-  return listData;
+  list.appendChild(listTitle);
+  list.appendChild(edit);
+  list.appendChild(del);
 };
 
-const fetchListInfo = function() {
-  const listData = addList();
-  const req = new Request("/addList", { method: "POST", body: listData });
-  fetch(req).then(res => {
-    return res.json();
+const createButton = function(name, id) {
+  let button = document.createElement("button");
+  button.id = `${name}_${id}`;
+  button.innerText = `${name}`;
+  return button;
+};
+
+const showList = function(titles) {
+  let id = 0;
+  titles.map(listTitle => {
+    addList(listTitle, id);
+    id++;
   });
 };
 
+const clearForm = function(firstElement, secondElement) {
+  firstElement.value = "";
+  secondElement.value = "";
+};
+
+const addListAndFetchAllLists = function() {
+  const title = document.getElementById("title");
+  const description = document.getElementById("description");
+  const listData = `title=${title.value}&description=${description.value}`;
+  const req = new Request("/addList", { method: "POST", body: listData });
+  const todoLists = document.getElementById("todoLists");
+  clearForm(title, description);
+  todoLists.innerHTML = "";
+  fetch(req)
+    .then(res => res.json())
+    .then(showList);
+};
+
+const fetchAllLists = function() {
+  const req = new Request("/showList", { method: "GET" });
+  fetch(req)
+    .then(res => res.json())
+    .then(showList);
+};
+
+// const performOperation = function() {
+//   const target = event.target;
+//   const id = target.id;
+//   if (id.startsWith("view")) viewList(id);
+//   if (id.startsWith("edit")) editList(id);
+//   if (id.startsWith("delete")) deleteList(id);
+// };
+
 window.onload = () => {
+  fetchAllLists();
   const add = document.getElementById("add");
-  add.onclick = fetchListInfo;
+  add.onclick = addListAndFetchAllLists;
+  // const container = document.getElementById("todoLists");
+  // container.onclick = performOperation;
 };

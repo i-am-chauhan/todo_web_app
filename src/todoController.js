@@ -22,7 +22,7 @@ const cookies = readFile(COOKIES_JSON);
 const makeTodoClass = (userTodo, list) => {
   const todoList = new TodoList(list.title, list.description);
   list.items.forEach(item => {
-    todoList.addItem(new TodoItem(item.name, item.description));
+    todoList.addItem(new TodoItem(item.title, item.description));
   });
   userTodo.addTodoList(todoList);
 };
@@ -80,7 +80,13 @@ const isValidUser = function(userId, password, informations = userInfo) {
   return false;
 };
 
-const renderUserHomePage = function(req, res, send, next, informations = userInfo) {
+const renderUserHomePage = function(
+  req,
+  res,
+  send,
+  next,
+  informations = userInfo
+) {
   const args = req.body;
   let { userId, password } = readArgs(args);
   userId = unescape(userId);
@@ -115,11 +121,18 @@ const createTodoList = function(title, description, userId) {
   writeJsonData(USER_TODO_DATA_JSON, userTodoData);
 };
 
-const saveTodoList = function(req, res) {
+const getTodoListTitles = function(userId) {
+  return userTodoData[userId].todoList.map(list => list.title);
+};
+
+const saveTodoList = function(req, res, send) {
   const { title, description } = readArgs(req.body);
   const cookie = req.headers["cookie"];
   const userId = getUserId(cookie);
   createTodoList(title, description, userId);
+  const todoListTitles = getTodoListTitles(userId);
+  const content = JSON.stringify(todoListTitles);
+  send(res, content);
 };
 
 const handleLogout = function(req, res, send) {
@@ -134,18 +147,67 @@ const serveLoginPage = function(req, res, send) {
   return send(res, html.loginPage);
 };
 
-const serveSignupPage = function(req, res, send){
+const serveSignupPage = function(req, res, send) {
   return send(res, html.signupPage);
-}
+};
 
-const serveHomePage = function(req, res, send){
+const serveHomePage = function(req, res, send) {
   const cookie = req.headers["cookie"];
   if (!cookies[cookie] || !cookie) {
     return send(res, html.loginPage);
   }
   const name = userInfo[getUserId(cookie)].name;
   send(res, html.homepage(name));
-}
+};
+
+const showTodoList = function(req, res, send) {
+  const cookie = req.headers["cookie"];
+  const userId = getUserId(cookie);
+  const todoListTitles = getTodoListTitles(userId);
+  const content = JSON.stringify(todoListTitles);
+  send(res, content);
+};
+
+const parseURL = function(url) {
+  return readArgs(url.split("/")[3]);
+};
+
+const serveItems = function(req, res, send) {
+  const { id } = parseURL(req.url);
+  const cookie = req.headers["cookie"];
+  const userId = getUserId(cookie);
+  const list = userTodoData[userId].todoList[+id];
+  send(res, JSON.stringify(list.items));
+};
+
+const getListDescription = function(userId, id) {
+  return userTodoData[userId].todoList[+id].description;
+};
+
+const renderListPage = function(req, res, send) {
+  const { title, id } = parseURL(req.url);
+  const cookie = req.headers["cookie"];
+  const userId = getUserId(cookie);
+  const userName = userInfo[userId].name;
+  const description = getListDescription(userId, id);
+  send(res, html.todoListPage(userName, title, description));
+};
+
+const createTodoItem = function(title, description, list) {
+  const item = new TodoItem(title, description);
+  list.addItem(item);
+  writeJsonData(USER_TODO_DATA_JSON, userTodoData);
+};
+
+const saveTodoItem = function(req, res, send) {
+  const { title, description, id } = readArgs(req.body);
+  const cookie = req.headers["cookie"];
+  const userId = getUserId(cookie);
+  const list = userTodoData[userId].todoList[+id];
+  createTodoItem(title, description, list);
+  const content = JSON.stringify(list.items);
+  send(res, content);
+};
 
 module.exports = {
   readBody,
@@ -157,5 +219,9 @@ module.exports = {
   handleLogout,
   serveLoginPage,
   serveSignupPage,
-  serveHomePage
+  serveHomePage,
+  showTodoList,
+  serveItems,
+  renderListPage,
+  saveTodoItem
 };
