@@ -6,11 +6,14 @@ const addList = (title, id) => {
   const del = createButton("delete", id);
   const listTitle = document.createElement("a");
   listTitle.href = `/list/view/title=${title}&id=${id}`;
+  const editList = document.createElement("a");
+  editList.href = `/list/edit/title=${title}&id=${id}`;
   listTitle.id = `title_${id}`;
   listTitle.innerText = `${title}`;
   todoLists.appendChild(list);
   list.appendChild(listTitle);
-  list.appendChild(edit);
+  list.appendChild(editList);
+  editList.appendChild(edit);
   list.appendChild(del);
 };
 
@@ -54,18 +57,21 @@ const fetchAllLists = function() {
     .then(showList);
 };
 
-// const performOperation = function() {
-//   const target = event.target;
-//   const id = target.id;
-//   if (id.startsWith("view")) viewList(id);
-//   if (id.startsWith("edit")) editList(id);
-//   if (id.startsWith("delete")) deleteList(id);
-// };
+const performOperation = function() {
+  const target = event.target;
+  const id = target.id;
+  if (id.startsWith("edit")) editList(id);
+  if (id.startsWith("delete")) deleteList(id);
+};
+
+const editList = function(id){
+
+}
 
 window.onload = () => {
   fetchAllLists();
   const add = document.getElementById("add");
   add.onclick = addListAndFetchAllLists;
-  // const container = document.getElementById("todoLists");
-  // container.onclick = performOperation;
+  const container = document.getElementById("todoLists");
+  container.onclick = performOperation;
 };

@@ -145,7 +145,51 @@ const html = {
           </div>
     </body>
   </html>
-  `
+  `,
+  editListPage: (name, title, description, id) => `<html>
+  <head>
+    <title>Edit todo list</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="/main.css" />
+    <body style="background: silver" class="mainPage">
+  </head>
+    <div class="titleBar">
+      <div class="appName">TODO</div>
+      <div class="userName">
+        ${name} <a href="/logout"><button class="logOut">Logout</button></a>
+      </div>
+    </div>
+    <div class="inputArea">
+      <h2 style="padding-top: 50px">Edit your todo list</h2>
+      <div class="loginForm">
+        <form action="/list/edit/" method="post" style="font-size: 20px">
+          <label>Title : </label>
+          <input
+            style="font-size: 20px; height: 40px; width: 450px"
+            type="text"
+            name="title"
+            id="title"
+            value="${title}"
+            required
+          />
+          <br /><br />
+          <label>Description : </label>
+          <input
+            style="font-size: 20px; height: 40px; width: 450px"
+            type="text"
+            name="description"
+            id="description"
+            value="${description}"
+            required
+          />
+          <br /><br />
+          <input type="hidden" name="id" value="${id}"/>
+          <button class="submit" type="submit" value="submit">Save</button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
+`
 };
 
 module.exports = html;

@@ -3,6 +3,11 @@ class TodoItem {
     this.title = title;
     this.description = description;
   }
+  
+  editDetails(title, description){
+    this.title = title;
+    this.description = description;
+  }
 }
 
 class TodoList {
@@ -11,8 +16,14 @@ class TodoList {
     this.description = description;
     this.items = [];
   }
+
   addItem(item) {
     this.items.push(item);
+  }
+
+  editDetails(title, description){
+    this.title = title;
+    this.description = description;
   }
 }
 
@@ -25,6 +36,7 @@ class UserTODOs {
   addTodoList(list) {
     this.todoList.push(list);
   }
+
 }
 
 module.exports = { TodoList, UserTODOs, TodoItem };

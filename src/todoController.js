@@ -209,6 +209,27 @@ const saveTodoItem = function(req, res, send) {
   send(res, content);
 };
 
+const renderEditListPage = function(req, res, send) {
+  const cookie = req.headers["cookie"];
+  const userId = getUserId(cookie);
+  const userName = userInfo[userId].name;
+  const { title, id } = parseURL(req.url);
+  const description = getListDescription(userId, id);
+  send(res, html.editListPage(userName, title, description, id));
+};
+
+const editList = function(req, res, send) {
+  const { title, description, id } = readArgs(req.body);
+  const cookie = req.headers["cookie"];
+  const userId = getUserId(cookie);
+  const userName = userInfo[userId].name;
+  const list = userTodoData[userId].todoList[+id];
+  list.editDetails(title, description);
+  writeJsonData(USER_TODO_DATA_JSON, userTodoData);
+  res.setHeader('location', '/');
+  send(res, html.editListPage(userName, title, description, id), 302);
+};
+
 module.exports = {
   readBody,
   logRequest,
@@ -223,5 +244,7 @@ module.exports = {
   showTodoList,
   serveItems,
   renderListPage,
-  saveTodoItem
+  saveTodoItem,
+  renderEditListPage,
+  editList
 };
