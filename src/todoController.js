@@ -3,7 +3,8 @@ const {
   readArgs,
   getURLPath,
   writeJsonData,
-  readFile
+  readFile,
+  redirect
 } = require("./appUtil.js");
 
 const { TodoList, UserTODOs, TodoItem } = require("./todoModel.js");
@@ -226,8 +227,16 @@ const editList = function(req, res, send) {
   const list = userTodoData[userId].todoList[+id];
   list.editDetails(title, description);
   writeJsonData(USER_TODO_DATA_JSON, userTodoData);
-  res.setHeader('location', '/');
-  send(res, html.editListPage(userName, title, description, id), 302);
+  redirect(res, "/", 302);
+};
+
+const deleteList = function(req, res, send) {
+  const cookie = req.headers["cookie"];
+  const userId = getUserId(cookie);
+  const { id } = parseURL(req.url);
+  userTodoData[userId].deleteTodoList(+id);
+  writeJsonData(USER_TODO_DATA_JSON, userTodoData);
+  redirect(res, "/", 302);
 };
 
 module.exports = {
@@ -246,5 +255,6 @@ module.exports = {
   renderListPage,
   saveTodoItem,
   renderEditListPage,
-  editList
+  editList,
+  deleteList
 };

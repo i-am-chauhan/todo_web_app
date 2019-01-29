@@ -8,13 +8,16 @@ const addList = (title, id) => {
   listTitle.href = `/list/view/title=${title}&id=${id}`;
   const editList = document.createElement("a");
   editList.href = `/list/edit/title=${title}&id=${id}`;
+  const deleteList = document.createElement("a");
+  deleteList.href = `/list/delete/title=${title}&id=${id}`;
   listTitle.id = `title_${id}`;
   listTitle.innerText = `${title}`;
   todoLists.appendChild(list);
   list.appendChild(listTitle);
   list.appendChild(editList);
+  list.appendChild(deleteList);
   editList.appendChild(edit);
-  list.appendChild(del);
+  deleteList.appendChild(del);
 };
 
 const createButton = function(name, id) {
@@ -64,9 +67,7 @@ const performOperation = function() {
   if (id.startsWith("delete")) deleteList(id);
 };
 
-const editList = function(id){
-
-}
+const editList = function(id) {};
 
 window.onload = () => {
   fetchAllLists();

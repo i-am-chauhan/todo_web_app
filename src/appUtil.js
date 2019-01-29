@@ -25,9 +25,16 @@ const readFile = function(filePath) {
   return JSON.parse(fs.readFileSync(filePath, "utf-8"));
 };
 
+const redirect = function(res, url, statusCode){
+  res.setHeader('location', url);
+  res.statusCode = statusCode;
+  res.end();
+}
+
 module.exports = {
   readArgs,
   getURLPath,
   writeJsonData,
-  readFile
+  readFile,
+  redirect
 };
