@@ -223,7 +223,6 @@ const editList = function(req, res, send) {
   const { title, description, id } = readArgs(req.body);
   const cookie = req.headers["cookie"];
   const userId = getUserId(cookie);
-  const userName = userInfo[userId].name;
   const list = userTodoData[userId].todoList[+id];
   list.editDetails(title, description);
   writeJsonData(USER_TODO_DATA_JSON, userTodoData);
@@ -237,6 +236,34 @@ const deleteList = function(req, res, send) {
   userTodoData[userId].deleteTodoList(+id);
   writeJsonData(USER_TODO_DATA_JSON, userTodoData);
   redirect(res, "/", 302);
+};
+
+const renderEditItemPage = function(req, res, send) {
+  const cookie = req.headers["cookie"];
+  const userId = getUserId(cookie);
+  const userName = userInfo[userId].name;
+  const { title, listId, itemId } = parseURL(req.url);
+  const item = userTodoData[userId].todoList[+listId].items[+itemId];
+  const description = item.description;
+  const content = html.editItemPage(
+    userName,
+    title,
+    description,
+    listId,
+    itemId
+  );
+  send(res, content);
+};
+const editItem = function(req, res, send) {
+  const { title, description, listId, itemId } = readArgs(req.body);
+  const cookie = req.headers["cookie"];
+  const userId = getUserId(cookie);
+  const list = userTodoData[userId].todoList[+listId];
+  const listTitle = list.title;
+  const item = userTodoData[userId].todoList[+listId].items[+itemId];
+  item.editDetails(title, description);
+  writeJsonData(USER_TODO_DATA_JSON, userTodoData);
+  redirect(res, `/list/view/title=${listTitle}&id=${listId}/`, 302);
 };
 
 module.exports = {
@@ -256,5 +283,7 @@ module.exports = {
   saveTodoItem,
   renderEditListPage,
   editList,
-  deleteList
+  deleteList,
+  editItem,
+  renderEditItemPage
 };

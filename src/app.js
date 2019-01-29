@@ -18,7 +18,9 @@ const {
   saveTodoItem,
   renderEditListPage,
   editList,
-  deleteList
+  deleteList,
+  renderEditItemPage,
+  editItem
 } = require("./todoController");
 
 app.use(readBody);
@@ -30,7 +32,9 @@ app.get("/logout", handleLogout);
 app.get("/showList", showTodoList);
 app.get(/\/list\/view\//, renderListPage);
 app.get(/\/list\/edit\//, renderEditListPage);
+app.get(/\/item\/edit\//, renderEditItemPage);
 app.get(/\/list\/delete\//, deleteList);
+app.post(/\/item\/edit\//, editItem);
 app.post(/\/list\/view\//, serveItems);
 app.post(/\/list\/edit\//, editList);
 app.post("/", renderUserHomePage);

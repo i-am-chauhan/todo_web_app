@@ -189,6 +189,51 @@ const html = {
     </div>
   </body>
 </html>
+`,
+  editItemPage: (name, title, description, listId, itemId) => `<html>
+<head>
+  <title>Edit Todo Item</title>
+  <link rel="stylesheet" type="text/css" media="screen" href="/main.css" />
+</head>
+<body style="background: silver" class="mainPage">
+  <div class="titleBar">
+    <div class="appName">TODO</div>
+    <div class="userName">
+      ${name} <a href="/logout"><button class="logOut">Logout</button></a>
+    </div>
+  </div>
+  <div class="inputArea">
+    <h2 style="padding-top: 50px">Edit todo Item</h2>
+    <div class="loginForm">
+      <form action="/item/edit/" method="post" style="font-size: 20px">
+        <label>Title : </label>
+        <input
+          style="font-size: 20px; height: 40px; width: 450px"
+          type="text"
+          name="title"
+          id="title"
+          value="${title}"
+          required
+        />
+        <br /><br />
+        <label>Description : </label>
+        <input
+          style="font-size: 20px; height: 40px; width: 450px"
+          type="text"
+          name="description"
+          id="description"
+          value="${description}"
+          required
+        />
+        <br /><br />
+        <input type="hidden" name="listId" value="${listId}"/>
+        <input type="hidden" name="itemId" value="${itemId}"/>
+        <button class="submit" type="submit" value="submit">Save</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
 `
 };
 

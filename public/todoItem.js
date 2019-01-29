@@ -8,22 +8,29 @@ const parseURL = function(url) {
   );
 };
 
-const addItem = (title, description, id) => {
+const addItem = (currentURL, title, description, id) => {
   const todoItems = document.getElementById("todoItems");
   let item = document.createElement("li");
   item.id = id;
+  const listId = getId(currentURL);
   const edit = createButton("edit", id);
   const del = createButton("delete", id);
   const itemTitle = document.createElement("span");
   const itemDescription = document.createElement("p");
+  const editItem = document.createElement("a");
+  editItem.href = `/item/edit/title=${title}&listId=${listId}&itemId=${id}`;
+  const deleteItem = document.createElement("a");
+  deleteItem.href = `/item/delete/title=${title}&listId=${listId}&itemId=${id}`;
   itemDescription.innerText = description;
   itemTitle.id = `title_${id}`;
   itemTitle.innerText = title;
   todoItems.appendChild(item);
   todoItems.appendChild(itemDescription);
   item.appendChild(itemTitle);
-  item.appendChild(edit);
-  item.appendChild(del);
+  item.appendChild(editItem);
+  item.appendChild(deleteItem);
+  editItem.appendChild(edit);
+  deleteItem.appendChild(del);
 };
 
 const createButton = function(name, id) {
@@ -33,10 +40,10 @@ const createButton = function(name, id) {
   return button;
 };
 
-const showItems = function(items) {
+const showItems = function(url, items) {
   let id = 0;
   items.map(item => {
-    addItem(item.title, item.description, id);
+    addItem(url, item.title, item.description, id);
     id++;
   });
 };
@@ -46,7 +53,7 @@ const fetchAllItems = function(currentURL) {
   const req = new Request(url, { method: "POST" });
   fetch(req)
     .then(res => res.json())
-    .then(showItems);
+    .then(showItems.bind(null, currentURL));
 };
 
 const clearForm = function(firstElement, secondElement) {
@@ -72,7 +79,7 @@ const addItemAndFetchAllItems = function(currentURL) {
   todoItems.innerHTML = "";
   fetch(req)
     .then(res => res.json())
-    .then(showItems);
+    .then(showItems.bind(null, currentURL));
 };
 
 window.onload = () => {
