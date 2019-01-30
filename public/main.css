@@ -59,7 +59,7 @@ h3 {
 
 .loginForm {
   width: 400px;
-  margin: 50px auto;
+  margin: 20px 75px;
 }
 
 h2 {
@@ -83,12 +83,17 @@ h2 {
   font-size: 20px;
 }
 
-input,
+input {
+  border-radius: 5px;
+  font-size: 20px;
+  width: 450px;
+  height: 30px;
+}
+
 textarea {
   border-radius: 5px;
   font-size: 20px;
 }
-
 ul {
   list-style-type: none;
 }

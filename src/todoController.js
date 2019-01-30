@@ -29,7 +29,7 @@ const makeTodoClass = (userTodo, list) => {
   userTodo.addTodoList(todoList);
 };
 
-const bringBackToClass = function(todoObject) {
+const restoreTODOsClass = function(todoObject) {
   Object.keys(todoObject).forEach(userId => {
     const userTodo = new UserTODOs(userId);
     todoObject[userId].todoList.forEach(makeTodoClass.bind(null, userTodo));
@@ -37,7 +37,7 @@ const bringBackToClass = function(todoObject) {
   });
 };
 
-bringBackToClass(userTodoData);
+restoreTODOsClass(userTodoData);
 
 const getUserId = cookie => {
   const userIdPair = cookie.split(";")[0];
@@ -104,8 +104,14 @@ const renderUserHomePage = function(
   send(res, html.homepage(informations[userId].name));
 };
 
+const doesAccountExist = function(userId) {
+  return Object.keys(userInfo).includes(userId);
+};
+
 const createNewAccount = function(req, res, send, next, fileSystem = fs) {
   let { name, email, userId, password } = readArgs(req.body);
+  if (doesAccountExist(userId))
+    return send(res, "Already have an account with this userId");
   name = format(name);
   email = format(email);
   userId = format(userId);

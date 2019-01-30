@@ -81,7 +81,7 @@ const html = {
     <body class="mainPage">
       <h2>TODO LIST</h2>
       <div class="inputArea">
-        <h3 style="padding-top: 50px">Create your account</h3>
+        <h3 style="padding-top: 20px">Create your account</h3>
         <div class="loginForm">
           <form action="/createNewAccount" method="post">
             <label>Name : </label>
