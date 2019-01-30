@@ -4,10 +4,11 @@ const html = {
   <head>
     <title>TODO</title>
     <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
-    <script src="todo.js"></script>
+    <script src="todoList.js"></script>
   </head>
   <body class="mainPage">
     <div class="titleBar">
+    <a class="homeLogo" href="/" >&#127760</a>
       <div class="appName">TODO</div>
       <div class="userName">
         ${name} <a href="/logout"><button class="logOut">Logout</button></a>
@@ -33,8 +34,8 @@ const html = {
           <textarea
             name="description"
             id="description"
-            cols="30"
-            rows="10"
+            cols="25"
+            rows="5"
           ></textarea>
           <br /><br />
           <button class="submit" id="add">Add</button>
@@ -50,7 +51,7 @@ const html = {
       <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
       <script src="main.js"></script>
     </head>
-    <body style="background: silver">
+    <body class="mainPage">
       <h2>TODO LIST</h2>
       <div class="inputArea">
         <h3 style="padding-top: 50px">Log in to your account</h3>
@@ -77,7 +78,7 @@ const html = {
       <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
       <script src="main.js"></script>
     </head>
-    <body style="background: silver">
+    <body class="mainPage">
       <h2>TODO LIST</h2>
       <div class="inputArea">
         <h3 style="padding-top: 50px">Create your account</h3>
@@ -107,10 +108,12 @@ const html = {
       <link rel="stylesheet" type="text/css" href="/main.css" />
       <script src="/todoItem.js"></script>
     </head>
-    <body>
+    <body class="mainPage">
       <div class="titleBar">
+      <a class="homeLogo" href="/" >&#127760</a>
         <div class="appName">TODO</div>
-        <h2 style="position: absolute; padding-left: 50% ">${listname}</h2>
+        <div style="width:550px;height:40px;margin-left:300px">
+        <p style="font-size:25px;text-align:center">${listname}</p></div>
         <div class="userName">
           ${username} <a href="/logout"><button class="logOut">Logout</button></a>
         </div>
@@ -124,12 +127,12 @@ const html = {
           <div class="addList">
             <h3>Add item</h3>
             <div style="padding: 15px">
-              Description:
+              <p>Description:</p>
               <textarea
                 name="description"
                 id="description"
                 cols="30"
-                rows="10"
+                rows="5"
               ></textarea>
               <br /><br />
               <button class="submit" id="add">Add</button>
@@ -144,7 +147,9 @@ const html = {
     <link rel="stylesheet" type="text/css" media="screen" href="/main.css" />
     <body style="background: silver" class="mainPage">
   </head>
+  <body class="mainPage">
     <div class="titleBar">
+    <a class="homeLogo" href="/" >&#127760</a>
       <div class="appName">TODO</div>
       <div class="userName">
         ${name} <a href="/logout"><button class="logOut">Logout</button></a>
@@ -153,7 +158,7 @@ const html = {
     <div class="inputArea">
       <h2 style="padding-top: 50px">Edit your todo list</h2>
       <div class="loginForm">
-        <form action="/list/edit/" method="post" style="font-size: 20px">
+        <form action="/list/edit" method="post" style="font-size: 20px">
           <label>Title : </label>
           <input
             style="font-size: 20px; height: 40px; width: 450px"
@@ -187,8 +192,9 @@ const html = {
   <title>Edit Todo Item</title>
   <link rel="stylesheet" type="text/css" media="screen" href="/main.css" />
 </head>
-<body style="background: silver" class="mainPage">
+<body class="mainPage">
   <div class="titleBar">
+  <a class="homeLogo" href="/" >&#127760</a>
     <div class="appName">TODO</div>
     <div class="userName">
       ${name} <a href="/logout"><button class="logOut">Logout</button></a>
@@ -197,7 +203,7 @@ const html = {
   <div class="inputArea">
     <h2 style="padding-top: 50px">Edit todo Item</h2>
     <div class="loginForm">
-      <form action="/item/edit/" method="post" style="font-size: 20px">
+      <form action="/item/edit" method="post" style="font-size: 20px">
         
         <label>Description : </label>
         <input
@@ -217,7 +223,38 @@ const html = {
   </div>
 </body>
 </html>
-`
+`,
+  pageNotFoundError: `<!DOCTYPE html>
+<html>
+  <head>
+    <title>Page Not Found</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="/main.css" />
+  </head>
+  <body style="background: rgb(153, 161, 170)">
+    <div class="pageNotFoundErrorDiv">
+      <p class="pageNotFoundErrorStatusCode">404</p>
+      <p class="pageNotFoundErrorWebpageText">Webpage</p>
+      <p class="pageNotFoundErrorNotFoundText">Not Found</p>
+      </div>
+    </div>
+  </body>
+</html>
+`,
+  authorizationError: `<!DOCTYPE html>
+<html>
+  <head>
+    <title>authorization error</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="/main.css" />
+  </head>
+  <body style="background: rgb(153, 161, 170)">
+    <div class="pageNotFoundErrorDiv">
+      <p class="pageNotFoundErrorStatusCode">401</p>
+      <p class="pageNotFoundErrorWebpageText">Authorization</p>
+      <p class="pageNotFoundErrorNotFoundText">has been refused</p>
+      </div>
+    </div>
+  </body>
+</html>`
 };
 
 module.exports = html;

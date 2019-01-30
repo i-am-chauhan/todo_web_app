@@ -7,7 +7,7 @@ const addList = (title, status, id) => {
   checkBox.id = `status_${id}`;
   checkBox.innerHTML = statusBox[status];
   const listTitle = document.createElement("a");
-  listTitle.href = `/list/view/title=${title}&id=${id}`;
+  listTitle.href = `/list/view?title=${title}&id=${id}`;
   listTitle.id = `title_${id}`;
   listTitle.innerText = `${title}`;
   todoLists.appendChild(list);
@@ -20,9 +20,9 @@ const createAndDrawButton = function(title, id, parentElement) {
   const edit = createButton("edit", id);
   const del = createButton("delete", id);
   const editList = document.createElement("a");
-  editList.href = `/list/edit/title=${title}&id=${id}`;
+  editList.href = `/list/edit?title=${title}&id=${id}`;
   const deleteList = document.createElement("a");
-  deleteList.href = `/list/delete/title=${title}&id=${id}`;
+  deleteList.href = `/list/delete?title=${title}&id=${id}`;
   parentElement.appendChild(editList);
   parentElement.appendChild(deleteList);
   editList.appendChild(edit);

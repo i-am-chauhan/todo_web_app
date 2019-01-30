@@ -29,9 +29,9 @@ const createAndDrawButton = function(currentURL, id, parentElement) {
   const edit = createButton("edit", id);
   const del = createButton("delete", id);
   const editItem = document.createElement("a");
-  editItem.href = `/item/edit/listId=${listId}&itemId=${id}`;
+  editItem.href = `/item/edit?listId=${listId}&itemId=${id}`;
   const deleteItem = document.createElement("a");
-  deleteItem.href = `/item/delete/listId=${listId}&itemId=${id}`;
+  deleteItem.href = `/item/delete?listId=${listId}&itemId=${id}`;
   parentElement.appendChild(editItem);
   parentElement.appendChild(deleteItem);
   editItem.appendChild(edit);
@@ -66,7 +66,7 @@ const clearForm = function(element) {
 };
 
 const getId = url => {
-  const titleAndId = url.split("/")[5];
+  const titleAndId = url.split("?")[1];
   return titleAndId.split("&")[1].split("=")[1];
 };
 

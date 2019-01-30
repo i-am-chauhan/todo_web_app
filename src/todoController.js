@@ -63,7 +63,7 @@ const logRequest = (req, res, send, next) => {
 const getFileContent = function(res, send, path) {
   fs.readFile(path, (err, content) => {
     if (err) {
-      send(res, "File Not Found", 404);
+      send(res, html.pageNotFoundError, 404);
       return;
     }
     send(res, content);
@@ -94,7 +94,7 @@ const renderUserHomePage = function(
   userId = format(userId);
   password = format(password);
   if (!isValidUser(userId, password, informations)) {
-    send(res, "authorization has been refused", 401);
+    send(res, html.authorizationError, 401);
     return;
   }
   const cookie = `userId=${userId}`;
@@ -148,7 +148,7 @@ const handleLogout = function(req, res, send) {
   delete cookies[cookie];
   writeJsonData(COOKIES_JSON, cookies);
   res.setHeader("Set-Cookie", "userId=;Expires= Thu, 1 JAN 1970 00:00:01 GMT;");
-  send(res, html.loginPage);
+  redirect(res, "/login", 302);
 };
 
 const serveLoginPage = function(req, res, send) {
@@ -177,7 +177,7 @@ const showTodoList = function(req, res, send) {
 };
 
 const parseURL = function(url) {
-  return readArgs(url.split("/")[3]);
+  return readArgs(url.split("?")[1]);
 };
 
 const serveItems = function(req, res, send) {
@@ -271,7 +271,7 @@ const editItem = function(req, res) {
   description = format(description);
   item.editDetails(description);
   writeJsonData(USER_TODO_DATA_JSON, userTodoData);
-  redirect(res, `/list/view/title=${listTitle}&id=${listId}/`, 302);
+  redirect(res, `/list/view?title=${listTitle}&id=${listId}`, 302);
 };
 
 const deleteItem = function(req, res) {
@@ -282,7 +282,7 @@ const deleteItem = function(req, res) {
   const listTitle = list.title;
   list.deleteItem(itemId);
   writeJsonData(USER_TODO_DATA_JSON, userTodoData);
-  redirect(res, `/list/view/title=${listTitle}&id=${listId}/`, 302);
+  redirect(res, `/list/view?title=${listTitle}&id=${listId}`, 302);
 };
 
 const toggleListStatus = function(req, res, send) {
