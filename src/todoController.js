@@ -14,7 +14,8 @@ const html = require("./template");
 const {
   USER_DATA_JSON,
   USER_TODO_DATA_JSON,
-  COOKIES_JSON
+  COOKIES_JSON,
+  EXPIRY_TIME
 } = require("./constants");
 
 const userInfo = readFile(USER_DATA_JSON);
@@ -42,6 +43,11 @@ restoreTODOsClass(userTodoData);
 const getUserId = cookie => {
   const userIdPair = cookie.split(";")[0];
   return userIdPair.split("=")[1];
+};
+
+const extractUserIdFromCookie = function(req) {
+  const cookie = req.headers["cookie"];
+  return getUserId(cookie);
 };
 
 const readBody = (req, res, send, next) => {
@@ -120,7 +126,7 @@ const createNewAccount = function(req, res, send, next, fileSystem = fs) {
   userTodoData[userId] = new UserTODOs(userId);
   writeJsonData(USER_TODO_DATA_JSON, userTodoData, fileSystem);
   writeJsonData(USER_DATA_JSON, userInfo, fileSystem);
-  send(res, html.signupPage);
+  redirect(res, '/login', 302);
 };
 
 const createTodoList = function(title, description, userId) {
@@ -139,8 +145,7 @@ const getTodoListTitlesAndStatus = function(userId) {
 
 const saveTodoList = function(req, res, send) {
   let { title, description } = readArgs(req.body);
-  const cookie = req.headers["cookie"];
-  const userId = getUserId(cookie);
+  const userId = extractUserIdFromCookie(req);
   title = format(title);
   description = format(description);
   createTodoList(title, description, userId);
@@ -153,7 +158,7 @@ const handleLogout = function(req, res, send) {
   const cookie = req.headers["cookie"];
   delete cookies[cookie];
   writeJsonData(COOKIES_JSON, cookies);
-  res.setHeader("Set-Cookie", "userId=;Expires= Thu, 1 JAN 1970 00:00:01 GMT;");
+  res.setHeader("Set-Cookie", `userId=;${EXPIRY_TIME};`);
   redirect(res, "/login", 302);
 };
 
@@ -175,8 +180,7 @@ const serveHomePage = function(req, res, send) {
 };
 
 const showTodoList = function(req, res, send) {
-  const cookie = req.headers["cookie"];
-  const userId = getUserId(cookie);
+  const userId = extractUserIdFromCookie(req);
   const todoListTitlesAndStatus = getTodoListTitlesAndStatus(userId);
   const content = JSON.stringify(todoListTitlesAndStatus);
   send(res, content);
@@ -188,8 +192,7 @@ const parseURL = function(url) {
 
 const serveItems = function(req, res, send) {
   const { id } = parseURL(req.url);
-  const cookie = req.headers["cookie"];
-  const userId = getUserId(cookie);
+  const userId = extractUserIdFromCookie(req);
   const list = userTodoData[userId].todoList[+id];
   send(res, JSON.stringify(list.items));
 };
@@ -200,8 +203,7 @@ const getListDescription = function(userId, id) {
 
 const renderListPage = function(req, res, send) {
   let { title, id } = parseURL(req.url);
-  const cookie = req.headers["cookie"];
-  const userId = getUserId(cookie);
+  const userId = extractUserIdFromCookie(req);
   const userName = userInfo[userId].name;
   const description = getListDescription(userId, id);
   title = format(title);
@@ -217,8 +219,7 @@ const createTodoItem = function(description, list) {
 
 const saveTodoItem = function(req, res, send) {
   const { description, listId } = readArgs(req.body);
-  const cookie = req.headers["cookie"];
-  const userId = getUserId(cookie);
+  const userId = extractUserIdFromCookie(req);
   const list = userTodoData[userId].todoList[+listId];
   createTodoItem(description, list);
   const content = JSON.stringify(list.items);
@@ -226,8 +227,7 @@ const saveTodoItem = function(req, res, send) {
 };
 
 const renderEditListPage = function(req, res, send) {
-  const cookie = req.headers["cookie"];
-  const userId = getUserId(cookie);
+  const userId = extractUserIdFromCookie(req);
   const userName = userInfo[userId].name;
   let { title, id } = parseURL(req.url);
   title = format(title);
@@ -237,8 +237,7 @@ const renderEditListPage = function(req, res, send) {
 
 const editList = function(req, res) {
   let { title, description, id } = readArgs(req.body);
-  const cookie = req.headers["cookie"];
-  const userId = getUserId(cookie);
+  const userId = extractUserIdFromCookie(req);
   const list = userTodoData[userId].todoList[+id];
   title = format(title);
   description = format(description);
@@ -248,8 +247,7 @@ const editList = function(req, res) {
 };
 
 const deleteList = function(req, res) {
-  const cookie = req.headers["cookie"];
-  const userId = getUserId(cookie);
+  const userId = extractUserIdFromCookie(req);
   const { id } = parseURL(req.url);
   userTodoData[userId].deleteTodoList(+id);
   writeJsonData(USER_TODO_DATA_JSON, userTodoData);
@@ -257,8 +255,7 @@ const deleteList = function(req, res) {
 };
 
 const renderEditItemPage = function(req, res, send) {
-  const cookie = req.headers["cookie"];
-  const userId = getUserId(cookie);
+  const userId = extractUserIdFromCookie(req);
   const userName = userInfo[userId].name;
   const { listId, itemId } = parseURL(req.url);
   const item = userTodoData[userId].todoList[+listId].items[+itemId];
@@ -269,8 +266,7 @@ const renderEditItemPage = function(req, res, send) {
 
 const editItem = function(req, res) {
   let { description, listId, itemId } = readArgs(req.body);
-  const cookie = req.headers["cookie"];
-  const userId = getUserId(cookie);
+  const userId = extractUserIdFromCookie(req);
   const list = userTodoData[userId].todoList[+listId];
   const listTitle = list.title;
   const item = list.items[+itemId];
@@ -282,8 +278,7 @@ const editItem = function(req, res) {
 
 const deleteItem = function(req, res) {
   const { listId, itemId } = parseURL(req.url);
-  const cookie = req.headers["cookie"];
-  const userId = getUserId(cookie);
+  const userId = extractUserIdFromCookie(req);
   const list = userTodoData[userId].todoList[+listId];
   const listTitle = list.title;
   list.deleteItem(itemId);
@@ -293,8 +288,7 @@ const deleteItem = function(req, res) {
 
 const toggleListStatus = function(req, res, send) {
   const listId = req.body;
-  const cookie = req.headers["cookie"];
-  const userId = getUserId(cookie);
+  const userId = extractUserIdFromCookie(req);
   const list = userTodoData[userId].todoList[+listId];
   list.toggleStatus();
   writeJsonData(USER_TODO_DATA_JSON, userTodoData);
@@ -305,8 +299,7 @@ const toggleListStatus = function(req, res, send) {
 
 const toggleItemStatus = function(req, res, send) {
   const { listId, itemId } = readArgs(req.body);
-  const cookie = req.headers["cookie"];
-  const userId = getUserId(cookie);
+  const userId = extractUserIdFromCookie(req);
   const list = userTodoData[userId].todoList[+listId];
   const items = list.items;
   items[itemId].toggleStatus();

@@ -34,7 +34,7 @@ const html = {
           <textarea
             name="description"
             id="description"
-            cols="25"
+            cols="30"
             rows="5"
           ></textarea>
           <br /><br />
@@ -230,7 +230,7 @@ const html = {
     <title>Page Not Found</title>
     <link rel="stylesheet" type="text/css" media="screen" href="/main.css" />
   </head>
-  <body style="background: rgb(153, 161, 170)">
+  <body>
     <div class="pageNotFoundErrorDiv">
       <p class="pageNotFoundErrorStatusCode">404</p>
       <p class="pageNotFoundErrorWebpageText">Webpage</p>
@@ -246,7 +246,7 @@ const html = {
     <title>authorization error</title>
     <link rel="stylesheet" type="text/css" media="screen" href="/main.css" />
   </head>
-  <body style="background: rgb(153, 161, 170)">
+  <body>
     <div class="pageNotFoundErrorDiv">
       <p class="pageNotFoundErrorStatusCode">401</p>
       <p class="pageNotFoundErrorWebpageText">Authorization</p>

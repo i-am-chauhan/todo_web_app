@@ -32,7 +32,7 @@ const createAndDrawButton = function(title, id, parentElement) {
 const createButton = function(name, id) {
   let button = document.createElement("button");
   button.id = `${name}_${id}`;
-  button.innerText = `${name}`;
+  button.innerText = name;
   return button;
 };
 
