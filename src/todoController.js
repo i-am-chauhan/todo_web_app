@@ -41,13 +41,30 @@ const restoreTODOsClass = function(todoObject) {
 restoreTODOsClass(userTodoData);
 
 const getUserId = cookie => {
-  const userIdPair = cookie.split(";")[0];
+  const keyValuePairs = cookie.split(";")[0];
+  const userIdPair = keyValuePairs.split("&")[0];
   return userIdPair.split("=")[1];
 };
 
 const extractUserIdFromCookie = function(req) {
   const cookie = req.headers["cookie"];
   return getUserId(cookie);
+};
+
+const readCookie = function(req, res, send, next) {
+  const cookie = req.headers["cookie"];
+  const URLToAccess = [
+    "/login",
+    "/signup",
+    "/main.css",
+    "/",
+    "/createNewAccount"
+  ];
+  if (!cookies[cookie] && !URLToAccess.includes(req.url)) {
+    redirect(res, "/login", 302);
+    return;
+  }
+  next();
 };
 
 const readBody = (req, res, send, next) => {
@@ -103,7 +120,8 @@ const renderUserHomePage = function(
     send(res, html.authorizationError, 401);
     return;
   }
-  const cookie = `userId=${userId}`;
+  const date = new Date();
+  const cookie = `userId=${userId}&date=${date}`;
   res.setHeader("Set-Cookie", cookie);
   cookies[cookie] = userId;
   writeJsonData(COOKIES_JSON, cookies);
@@ -126,7 +144,7 @@ const createNewAccount = function(req, res, send, next, fileSystem = fs) {
   userTodoData[userId] = new UserTODOs(userId);
   writeJsonData(USER_TODO_DATA_JSON, userTodoData, fileSystem);
   writeJsonData(USER_DATA_JSON, userInfo, fileSystem);
-  redirect(res, '/login', 302);
+  redirect(res, "/login", 302);
 };
 
 const createTodoList = function(title, description, userId) {
@@ -163,10 +181,14 @@ const handleLogout = function(req, res, send) {
 };
 
 const serveLoginPage = function(req, res, send) {
+  const cookie = req.headers["cookie"];
+  if (cookies[cookie]) return redirect(res, "/", 302);
   return send(res, html.loginPage);
 };
 
 const serveSignupPage = function(req, res, send) {
+  const cookie = req.headers["cookie"];
+  if (cookies[cookie]) return redirect(res, "/", 302);
   return send(res, html.signupPage);
 };
 
@@ -201,12 +223,22 @@ const getListDescription = function(userId, id) {
   return userTodoData[userId].todoList[+id].description;
 };
 
+const isValidList = function(userId, title, id) {
+  const index = +id;
+  const allList = userTodoData[userId].todoList;
+  const list = allList[index];
+  return allList.hasOwnProperty(index) && list.title == title;
+};
+
 const renderListPage = function(req, res, send) {
   let { title, id } = parseURL(req.url);
   const userId = extractUserIdFromCookie(req);
   const userName = userInfo[userId].name;
-  const description = getListDescription(userId, id);
   title = format(title);
+  if (!isValidList(userId, title, id)) {
+    return send(res, html.pageNotFoundError, 404);
+  }
+  const description = getListDescription(userId, id);
   send(res, html.todoListPage(userName, title, description));
 };
 
@@ -231,6 +263,9 @@ const renderEditListPage = function(req, res, send) {
   const userName = userInfo[userId].name;
   let { title, id } = parseURL(req.url);
   title = format(title);
+  if (!isValidList(userId, title, id)) {
+    return send(res, html.pageNotFoundError, 404);
+  }
   const description = getListDescription(userId, id);
   send(res, html.editListPage(userName, title, description, id));
 };
@@ -246,18 +281,31 @@ const editList = function(req, res) {
   redirect(res, "/", 302);
 };
 
-const deleteList = function(req, res) {
+const deleteList = function(req, res, send9) {
   const userId = extractUserIdFromCookie(req);
-  const { id } = parseURL(req.url);
+  let { title, id } = parseURL(req.url);
+  title = format(title);
+  if (!isValidList(userId, title, id)) {
+    return send(res, html.pageNotFoundError, 404);
+  }
   userTodoData[userId].deleteTodoList(+id);
   writeJsonData(USER_TODO_DATA_JSON, userTodoData);
   redirect(res, "/", 302);
+};
+
+const isValidItem = function(userId, listId, itemId) {
+  const allList = userTodoData[userId].todoList;
+  const listItems = allList[+listId].items;
+  return allList.hasOwnProperty(+listId) && listItems.hasOwnProperty(+itemId);
 };
 
 const renderEditItemPage = function(req, res, send) {
   const userId = extractUserIdFromCookie(req);
   const userName = userInfo[userId].name;
   const { listId, itemId } = parseURL(req.url);
+  if (!isValidItem(userId, listId, itemId)) {
+    return send(res, html.pageNotFoundError, 404);
+  }
   const item = userTodoData[userId].todoList[+listId].items[+itemId];
   const description = item.description;
   const content = html.editItemPage(userName, description, listId, itemId);
@@ -276,11 +324,14 @@ const editItem = function(req, res) {
   redirect(res, `/list/view?title=${listTitle}&id=${listId}`, 302);
 };
 
-const deleteItem = function(req, res) {
+const deleteItem = function(req, res, send) {
   const { listId, itemId } = parseURL(req.url);
   const userId = extractUserIdFromCookie(req);
   const list = userTodoData[userId].todoList[+listId];
   const listTitle = list.title;
+  if (!isValidItem(userId, listId, itemId)) {
+    return send(res, html.pageNotFoundError, 404);
+  }
   list.deleteItem(itemId);
   writeJsonData(USER_TODO_DATA_JSON, userTodoData);
   redirect(res, `/list/view?title=${listTitle}&id=${listId}`, 302);
@@ -308,6 +359,7 @@ const toggleItemStatus = function(req, res, send) {
 };
 
 module.exports = {
+  readCookie,
   readBody,
   logRequest,
   serveFile,

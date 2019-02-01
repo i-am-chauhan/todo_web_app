@@ -8,10 +8,38 @@ const parseURL = function(url) {
   );
 };
 
+const setHref = function(action, listid, itemId) {
+  return `/item/${action}?listId=${listid}&itemId=${itemId}`;
+};
+
+const createButton = function(
+  action,
+  className,
+  listId,
+  itemId,
+  parentElement
+) {
+  let button = document.createElement("button");
+  button.id = `${action}_${itemId}`;
+  button.innerText = action;
+  button.className = className;
+  const anchor = document.createElement("a");
+  anchor.href = setHref(action, listId, itemId);
+  parentElement.appendChild(anchor);
+  anchor.appendChild(button);
+};
+
+const createAndDrawButton = function(currentURL, itemId, parentElement) {
+  const listId = getId(currentURL);
+  createButton("edit", "editButton", listId, itemId, parentElement);
+  createButton("delete", "deleteButton", listId, itemId, parentElement);
+};
+
 const addItem = (currentURL, description, status, id) => {
   const statusBox = { done: "&#9745", undone: "&#9744" };
   const todoItems = document.getElementById("todoItems");
-  let item = document.createElement("li");
+  let item = document.createElement("div");
+  item.className = "listTitle";
   let checkBox = document.createElement("span");
   checkBox.id = `status_${id}`;
   checkBox.innerHTML = statusBox[status];
@@ -22,27 +50,6 @@ const addItem = (currentURL, description, status, id) => {
   item.appendChild(checkBox);
   item.appendChild(descriptionArea);
   createAndDrawButton(currentURL, id, item);
-};
-
-const createAndDrawButton = function(currentURL, id, parentElement) {
-  const listId = getId(currentURL);
-  const edit = createButton("edit", id);
-  const del = createButton("delete", id);
-  const editItem = document.createElement("a");
-  editItem.href = `/item/edit?listId=${listId}&itemId=${id}`;
-  const deleteItem = document.createElement("a");
-  deleteItem.href = `/item/delete?listId=${listId}&itemId=${id}`;
-  parentElement.appendChild(editItem);
-  parentElement.appendChild(deleteItem);
-  editItem.appendChild(edit);
-  deleteItem.appendChild(del);
-};
-
-const createButton = function(name, id) {
-  let button = document.createElement("button");
-  button.id = `${name}_${id}`;
-  button.innerText = name;
-  return button;
 };
 
 const showItems = function(url, items) {

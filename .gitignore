@@ -2,3 +2,5 @@
 /private
 .nyc_output/
 /coverage
+public/home.html
+public/resources/

@@ -4,11 +4,12 @@ const html = {
   <head>
     <title>TODO</title>
     <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <script src="todoList.js"></script>
   </head>
   <body class="mainPage">
     <div class="titleBar">
-    <a class="homeLogo" href="/" >&#127760</a>
+    <a class="homeLogo" href="/" ><i class="fas fa-home"></i></a>
       <div class="appName">TODO</div>
       <div class="userName">
         ${name} <a href="/logout"><button class="logOut">Logout</button></a>
@@ -49,7 +50,6 @@ const html = {
     <head>
       <title>LogIn page</title>
       <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
-      <script src="main.js"></script>
     </head>
     <body class="mainPage">
       <h2>TODO LIST</h2>
@@ -76,7 +76,6 @@ const html = {
     <head>
       <title>SignUp page</title>
       <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
-      <script src="main.js"></script>
     </head>
     <body class="mainPage">
       <h2>TODO LIST</h2>
@@ -106,11 +105,13 @@ const html = {
     <head>
       <title>User Todo List</title>
       <link rel="stylesheet" type="text/css" href="/main.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
       <script src="/todoItem.js"></script>
     </head>
     <body class="mainPage">
       <div class="titleBar">
-      <a class="homeLogo" href="/" >&#127760</a>
+      <a class="homeLogo" href="/" ><i class="fas fa-home"></i></a>
         <div class="appName">TODO</div>
         <div style="width:550px;height:40px;margin-left:300px">
         <p style="font-size:25px;text-align:center">${listname}</p></div>
@@ -145,11 +146,12 @@ const html = {
   <head>
     <title>Edit todo list</title>
     <link rel="stylesheet" type="text/css" media="screen" href="/main.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <body style="background: silver" class="mainPage">
   </head>
   <body class="mainPage">
     <div class="titleBar">
-    <a class="homeLogo" href="/" >&#127760</a>
+    <a class="homeLogo" href="/" ><i class="fas fa-home"></i></a>
       <div class="appName">TODO</div>
       <div class="userName">
         ${name} <a href="/logout"><button class="logOut">Logout</button></a>
@@ -191,10 +193,11 @@ const html = {
 <head>
   <title>Edit Todo Item</title>
   <link rel="stylesheet" type="text/css" media="screen" href="/main.css" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 </head>
 <body class="mainPage">
   <div class="titleBar">
-  <a class="homeLogo" href="/" >&#127760</a>
+  <a class="homeLogo" href="/" ><i class="fas fa-home"></i></a>
     <div class="appName">TODO</div>
     <div class="userName">
       ${name} <a href="/logout"><button class="logOut">Logout</button></a>
@@ -204,16 +207,14 @@ const html = {
     <h2 style="padding-top: 50px">Edit todo Item</h2>
     <div class="loginForm">
       <form action="/item/edit" method="post" style="font-size: 20px">
-        
         <label>Description : </label>
-        <input
-          style="font-size: 20px; height: 40px; width: 450px"
-          type="text"
-          name="description"
-          id="description"
-          value="${description}"
-          required
-        />
+        <textarea
+                name="description"
+                id="description"
+                cols="40"
+                rows="8"
+                required
+              >${description}</textarea>
         <br /><br />
         <input type="hidden" name="listId" value="${listId}"/>
         <input type="hidden" name="itemId" value="${itemId}"/>

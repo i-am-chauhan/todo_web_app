@@ -1,44 +1,43 @@
+const setHref = function(action, title, id) {
+  return `/list/${action}?title=${title}&id=${id}`;
+};
+
+const createButton = function(action, className, id, title, parentElement) {
+  let button = document.createElement("button");
+  button.id = `${action}_${id}`;
+  button.innerText = action;
+  button.className = className;
+  const anchor = document.createElement("a");
+  anchor.href = setHref(action, title, id);
+  parentElement.appendChild(anchor);
+  anchor.appendChild(button);
+};
+
+const createAndDrawButton = function(title, id, parentElement) {
+  createButton("view", "viewButton", id, title, parentElement);
+  createButton("edit", "editButton", id, title, parentElement);
+  createButton("delete", "deleteButton", id, title, parentElement);
+};
+
 const addList = (title, status, id) => {
   const statusBox = { done: "&#9745", undone: "&#9744" };
   const todoLists = document.getElementById("todoLists");
-  const list = document.createElement("li");
+  const list = document.createElement("div");
   list.id = id;
   const checkBox = document.createElement("span");
   checkBox.id = `status_${id}`;
   checkBox.innerHTML = statusBox[status];
-  const listTitle = document.createElement("a");
-  listTitle.href = `/list/view?title=${title}&id=${id}`;
-  listTitle.id = `title_${id}`;
-  listTitle.innerText = `${title}`;
+  const listTitle = document.createElement("span");
+  list.className = "listTitle";
+  listTitle.innerText = title;
   todoLists.appendChild(list);
   list.appendChild(checkBox);
   list.appendChild(listTitle);
   createAndDrawButton(title, id, list);
 };
 
-const createAndDrawButton = function(title, id, parentElement) {
-  const edit = createButton("edit", id);
-  const del = createButton("delete", id);
-  const editList = document.createElement("a");
-  editList.href = `/list/edit?title=${title}&id=${id}`;
-  const deleteList = document.createElement("a");
-  deleteList.href = `/list/delete?title=${title}&id=${id}`;
-  parentElement.appendChild(editList);
-  parentElement.appendChild(deleteList);
-  editList.appendChild(edit);
-  deleteList.appendChild(del);
-};
-
-const createButton = function(name, id) {
-  let button = document.createElement("button");
-  button.id = `${name}_${id}`;
-  button.innerText = name;
-  return button;
-};
-
 const showList = function(titles) {
   let id = 0;
-  console.log('titles', titles);
   titles.map(({ title, status }) => {
     addList(title, status, id);
     id++;

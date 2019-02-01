@@ -2,6 +2,7 @@ const { Handler } = require("./framework");
 const app = new Handler();
 
 const {
+  readCookie,
   readBody,
   logRequest,
   serveFile,
@@ -28,6 +29,7 @@ const {
 
 app.use(readBody);
 app.use(logRequest);
+app.use(readCookie);
 app.get("/", serveHomePage);
 app.get("/signup", serveSignupPage);
 app.get("/login", serveLoginPage);
@@ -38,9 +40,9 @@ app.get(/\/list\/edit/, renderEditListPage);
 app.get(/\/item\/edit/, renderEditItemPage);
 app.get(/\/list\/delete/, deleteList);
 app.get(/\/item\/delete/, deleteItem);
+app.post(/\/list\/view/, serveItems);
 app.post(/\/list\/edit/, editList);
 app.post(/\/item\/edit/, editItem);
-app.post(/\/list\/view/, serveItems);
 app.post("/", renderUserHomePage);
 app.post("/toggleListStatus", toggleListStatus);
 app.post("/toggleItemStatus", toggleItemStatus);
