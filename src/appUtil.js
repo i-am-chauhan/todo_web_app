@@ -11,10 +11,6 @@ const readArgs = text => {
   return args;
 };
 
-const getURLPath = function(url) {
-  return "./public" + url;
-};
-
 const writeJsonData = (path, content, fileSystem = fs) => {
   fileSystem.writeFile(path, JSON.stringify(content), err => {});
 };
@@ -25,21 +21,13 @@ const readFile = function(filePath) {
   return JSON.parse(fs.readFileSync(filePath, "utf-8"));
 };
 
-const redirect = function(res, url, statusCode) {
-  res.setHeader("location", url);
-  res.statusCode = statusCode;
-  res.end();
-};
-
 const format = function(content) {
   return unescape(content).replace(/\+/g, " ");
 };
 
 module.exports = {
   readArgs,
-  getURLPath,
   writeJsonData,
   readFile,
-  redirect,
   format
 };

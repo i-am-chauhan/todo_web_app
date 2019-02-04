@@ -1,11 +1,11 @@
-const { Handler } = require("./framework");
-const app = new Handler();
+const express = require('express');
+const app = express();
+const cookieParser = require('cookie-parser');
 
 const {
   readCookie,
   readBody,
   logRequest,
-  serveFile,
   renderUserHomePage,
   createNewAccount,
   saveTodoList,
@@ -27,6 +27,8 @@ const {
   toggleItemStatus
 } = require("./todoController");
 
+app.use(express.static('public'));
+app.use(cookieParser());
 app.use(readBody);
 app.use(logRequest);
 app.use(readCookie);
@@ -49,6 +51,5 @@ app.post("/toggleItemStatus", toggleItemStatus);
 app.post("/createNewAccount", createNewAccount);
 app.post("/addList", saveTodoList);
 app.post("/addItem", saveTodoItem);
-app.use(serveFile);
 
-module.exports = app.handleRequest.bind(app);
+module.exports = app;
