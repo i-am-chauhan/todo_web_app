@@ -331,7 +331,6 @@ module.exports = {
 	readCookie,
 	readBody,
 	logRequest,
-	// serveFile,
 	renderUserHomePage,
 	createNewAccount,
 	saveTodoList,
